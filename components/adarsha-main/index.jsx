@@ -23,8 +23,11 @@ var main = React.createClass({
   },
   openFileinstaller:function(autoclose) {
     if (window.location.origin.indexOf("http://127.0.0.1")==0) {
-      require_kdb[0].url=window.location.origin+"/jiangkangyur.kdb";
+      for (var i=0;i<require_kdb.length;i++) {
+        require_kdb[i].url=window.location.origin+"/"+require_kdb[i].filename;  
+      }
     }
+
     return <fileinstaller quota="512M" autoclose={autoclose} needed={require_kdb} 
                      onReady={this.onReady}/>
   },

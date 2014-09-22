@@ -12,7 +12,9 @@
     "ksanaforge/checkbrowser": "*",
     "ksanaforge/htmlfs": "*",
     "adarsha/main": "*",
-    "adarsha/comp1": "*"
+    "adarsha/comp1": "*",
+    "adarsha/results": "*",
+    "adarsha/api": "*"
   },
   "development": {},
   "paths": [

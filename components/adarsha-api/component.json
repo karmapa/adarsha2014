@@ -1,0 +1,13 @@
+{
+  "name": "api",
+  "repo": "adarsha/api",
+  "description": "non visual module",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {},
+  "development": {},
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": ["index.js","search.js"],
+  "styles": []
+}

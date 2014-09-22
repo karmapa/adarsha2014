@@ -13,14 +13,29 @@ var fileinstaller=Require("fileinstaller");
 var kde=Require('ksana-document').kde;  // Ksana Database Engine
 var kse=Require('ksana-document').kse; // Ksana Search Engine (run at client side)
 var api=Require("api");
+var stacktoc=Require("stacktoc");  //載入目錄顯示元件
 
 var main = React.createClass({
   getInitialState: function() {
     return {dialog:null,res:{},db:null};
   },
+  genToc:function(texts,depths,voffs){
+    var out=[{depth:0,text:"Jiang Kangyur"}];
+    for(var i=0; i<texts.length; i++){
+      out.push({text:texts[i],depth:depths[i],voff:voffs[i]});
+    }
+    return out; 
+  },// 轉換為stacktoc 目錄格式
   onReady:function(usage,quota) {
     if (!this.state.db) kde.open("jiangkangyur",function(db){
         this.setState({db:db});
+    db.get([["fields","head"],["fields","head_depth"],["fields","head_voff"]],function(){
+      var heads=db.get(["fields","head"]);
+      var depths=db.get(["fields","head_depth"]);
+      var voffs=db.get(["fields","head_voff"]);
+      var toc=this.genToc(heads,depths,voffs);
+      this.setState({toc:toc});
+    }); //載入目錄
     },this);      
     this.setState({dialog:false,quota:quota,usage:usage});
   },
@@ -52,15 +67,19 @@ var main = React.createClass({
     } else { 
       return (
         <div>
-
-          <br/><input ref="tofind" defaultValue="དགེ"></input>
-          <button onClick={this.dosearch}>Search</button>
-          Search Example:   1.<a href='#' onClick={this.dosearch_ex} >བྱས</a>
-          2. <a href='#' onClick={this.dosearch_ex} >གནས</a>
-          3. <a href='#' onClick={this.dosearch_ex} >འགྱུར</a>
-          4. <a href='#' onClick={this.dosearch_ex} >བདག</a>
-          5. <a href='#' onClick={this.dosearch_ex} >དགའ</a>
-          <results res={this.state.res} tofind={this.state.tofind}/>
+          <div className="col-md-4">
+            <stacktoc data={this.state.toc} /> //顯示目錄
+          </div>
+          <div className="col-md-8">
+            <br/><input ref="tofind" defaultValue="དགེ"></input>
+            <button onClick={this.dosearch}>Search</button>
+            Search Example:   1.<a href='#' onClick={this.dosearch_ex} >བྱས</a>
+            2. <a href='#' onClick={this.dosearch_ex} >གནས</a>
+            3. <a href='#' onClick={this.dosearch_ex} >འགྱུར</a>
+            4. <a href='#' onClick={this.dosearch_ex} >བདག</a>
+            5. <a href='#' onClick={this.dosearch_ex} >དགའ</a>
+            <results res={this.state.res} tofind={this.state.tofind}/>
+          </div>
         </div>
       );
     }

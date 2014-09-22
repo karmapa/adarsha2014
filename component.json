@@ -14,7 +14,8 @@
     "adarsha/main": "*",
     "adarsha/comp1": "*",
     "adarsha/results": "*",
-    "adarsha/api": "*"
+    "adarsha/api": "*",
+    "ksanaforge/stacktoc":"*"
   },
   "development": {},
   "paths": [

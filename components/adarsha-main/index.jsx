@@ -72,7 +72,7 @@ var main = React.createClass({
           </div>
           <div className="col-md-8">
             <br/><input ref="tofind" defaultValue="དགེ"></input>
-            <button onClick={this.dosearch}>Search</button>
+            <button onClick={this.dosearch} className="btn btn-success btn-xs">Search</button>
             Search Example:   1.<a href='#' onClick={this.dosearch_ex} >བྱས</a>
             2. <a href='#' onClick={this.dosearch_ex} >གནས</a>
             3. <a href='#' onClick={this.dosearch_ex} >འགྱུར</a>

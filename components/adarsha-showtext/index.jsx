@@ -23,6 +23,9 @@ var showtext = React.createClass({
   getInitialState: function() {
     return {bar: "world"};
   },
+  hitClick: function(n){
+    if(this.props.showExcerpt) this.props.showExcerpt(n);
+  },
   render: function() {
     var pn=this.props.pagename;
     return (

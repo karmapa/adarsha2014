@@ -16,6 +16,10 @@ var resultlist=React.createClass({  //should search result
       </div>
     }); 
   }, 
+  gotopage:function(e) {
+    var vpos=parseInt(e.target.parentNode.dataset['vpos']);
+    this.props.gotopage(vpos);
+  },
   render:function() {
     if (this.props.res) {
       if (this.props.res.excerpt&&this.props.res.excerpt.length) {

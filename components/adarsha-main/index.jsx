@@ -14,6 +14,7 @@ var kde=Require('ksana-document').kde;  // Ksana Database Engine
 var kse=Require('ksana-document').kse; // Ksana Search Engine (run at client side)
 var api=Require("api");
 var stacktoc=Require("stacktoc");  //載入目錄顯示元件
+var showtext=Require("showtext");
 
 var main = React.createClass({
   getInitialState: function() {
@@ -61,24 +62,48 @@ var main = React.createClass({
       this.setState({res:data, tofind:tofind});  
     });
   },
+  showExcerpt:function(n) {
+    var voff=this.state.toc[n].voff;
+    this.dosearch(null,null,voff);
+  }, 
+  showPage:function(f,p,hideResultlist) {
+    kse.highlightPage(this.state.db,f,p,{q:this.state.q},function(data){
+      this.setState({bodytext:data});
+      if (hideResultlist) this.setState({res:[]});
+    });
+  }, 
+  showText:function(n) {
+    var res=kse.vpos2filepage(this.state.db,this.state.toc[n].voff);
+    this.showPage(res.file,res.page,true);
+  },
   render: function() {
     if (!this.state.quota) { // install required db
         return this.openFileinstaller(true);
     } else { 
+      var text="",pagename="";
+      if (this.state.bodytext) {
+        text=this.state.bodytext.text;
+        pagename=this.state.bodytext.pagename;
+    }
       return (
         <div>
           <div className="col-md-4">
-            <stacktoc data={this.state.toc} /> //顯示目錄
+            <stacktoc showText={this.showText} showExcerpt={this.showExcerpt} hits={this.state.res.rawresult} data={this.state.toc}/>// 顯示目錄
           </div>
           <div className="col-md-8">
-            <br/><input ref="tofind" defaultValue="དགེ"></input>
-            <button onClick={this.dosearch} className="btn btn-success btn-xs">Search</button>
-            Search Example:   1.<a href='#' onClick={this.dosearch_ex} >བྱས</a>
-            2. <a href='#' onClick={this.dosearch_ex} >གནས</a>
-            3. <a href='#' onClick={this.dosearch_ex} >འགྱུར</a>
-            4. <a href='#' onClick={this.dosearch_ex} >བདག</a>
-            5. <a href='#' onClick={this.dosearch_ex} >དགའ</a>
-            <results res={this.state.res} tofind={this.state.tofind}/>
+            <div className="text">
+            <showtext pagename={pagename} text={text} />
+            </div>
+            <div className="search">
+              <br/><input ref="tofind" defaultValue="དགེ"></input>
+              <button onClick={this.dosearch} className="btn btn-success btn-xs">Search</button>
+              Search Example:   1.<a href='#' onClick={this.dosearch_ex} >བྱས</a>
+              2. <a href='#' onClick={this.dosearch_ex} >གནས</a>
+              3. <a href='#' onClick={this.dosearch_ex} >འགྱུར</a>
+              4. <a href='#' onClick={this.dosearch_ex} >བདག</a>
+              5. <a href='#' onClick={this.dosearch_ex} >དགའ</a>
+              <results res={this.state.res} tofind={this.state.tofind}/>
+            </div>
           </div>
         </div>
       );

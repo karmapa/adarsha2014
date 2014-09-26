@@ -13,7 +13,7 @@
     "ksanaforge/htmlfs": "*",
     "adarsha/main": "*",
     "adarsha/comp1": "*",
-    "adarsha/results": "*",
+    "adarsha/resultlist": "*",
     "adarsha/api": "*",
     "ksanaforge/stacktoc": "*",
     "adarsha/showtext": "*"

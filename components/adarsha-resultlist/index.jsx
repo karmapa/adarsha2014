@@ -10,11 +10,11 @@ var resultlist=React.createClass({  //should search result
     return this.props.res.excerpt.map(function(r,i){ // excerpt is an array 
       var t = new RegExp(tofind,"g"); 
       r.text=r.text.replace(t,function(tofind){return "<span class='tofind'>"+tofind+"</span>"});
-      return <div>
-      <div className="pagename">{r.pagename}</div>
+      return <div data-vpos={r.hits[0][0]}>
+      <a onClick={this.gotopage} className="pagename">{r.pagename}</a>
         <div className="resultitem" dangerouslySetInnerHTML={{__html:r.text}}></div>
       </div>
-    }); 
+    },this); 
   }, 
   gotopage:function(e) {
     var vpos=parseInt(e.target.parentNode.dataset['vpos']);

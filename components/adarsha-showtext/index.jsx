@@ -1,9 +1,7 @@
 /** @jsx React.DOM */
 
 //var othercomponent=Require("other"); 
-var controls = React.createClass({
-  mixins: [React.addons.LinkedStateMixin],
-     
+var controls = React.createClass({  
     getInitialState: function() {
       return {value: this.props.pagename};
     },
@@ -14,7 +12,7 @@ var controls = React.createClass({
     render: function() {   
      return <div>
               <button onClick={this.props.prev}>←</button>
-               <input type="text" ref="pagename" valueLink={this.linkState('pagename')}></input>
+               <input type="text" ref="pagename" defaultValue={this.state.pagename}></input>
               <button onClick={this.props.next}>→</button>
               </div>
   }  

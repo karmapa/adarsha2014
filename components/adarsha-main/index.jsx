@@ -8,33 +8,14 @@ var require_kdb=[{
 }];  
 //var othercomponent=Require("other"); 
 var bootstrap=Require("bootstrap");  
-var results=Require("results");
+var resultlist=Require("resultlist");
 var fileinstaller=Require("fileinstaller");
 var kde=Require('ksana-document').kde;  // Ksana Database Engine
 var kse=Require('ksana-document').kse; // Ksana Search Engine (run at client side)
 var api=Require("api");
 var stacktoc=Require("stacktoc");  //載入目錄顯示元件
 var showtext=Require("showtext");
-       
-var resultlist=React.createClass({  //should search result
-  show:function() {  
-    return this.props.res.excerpt.map(function(r,i){ // excerpt is an array 
-      if (! r) return null;
-      return <div data-vpos={r.hits[0][0]}>
-      <span onClick={this.gotopage} className="sourcepage">{r.pagename}</span>)
-      <span className="resultitem" dangerouslySetInnerHTML={{__html:r.text}}></span>
-      </div>
-    },this);
-  },
-  gotopage:function(e) {
-    var vpos=parseInt(e.target.parentNode.dataset['vpos']);
-    this.props.gotopage(vpos);
-  },
-  render:function() { 
-    if (this.props.res.excerpt) return <div>{this.show()}</div>
-    else return <div>Not Found</div>
-  } 
-});    
+     
 
 var main = React.createClass({
   getInitialState: function() {
@@ -70,9 +51,10 @@ var main = React.createClass({
     return <fileinstaller quota="512M" autoclose={autoclose} needed={require_kdb} 
                      onReady={this.onReady}/>
   },
-  dosearch: function() {    
+  dosearch: function(){
+    var start=arguments[2];  
     var tofind=tofind=this.refs.tofind.getDOMNode().value;
-    kse.search(this.state.db,tofind,{range:{maxhit:100}},function(data){ //call search engine          
+    kse.search(this.state.db,tofind,{range:{start:start,maxhit:100}},function(data){ //call search engine          
       this.setState({res:data, tofind:tofind});  
     });
   },
@@ -82,12 +64,24 @@ var main = React.createClass({
       this.setState({res:data, tofind:tofind});  
     });
   },
+  dosearch_toc: function(){
+    var out=[];
+    var tofind_toc=this.refs.tofind_toc.getDOMNode().value;
+    this.state.toc.forEach(function(t){
+      if(t.text.match(tofind_toc)){
+        out.push(t);
+      };
+    });
+    this.setState
+      console.log(out); 
+  },
   showExcerpt:function(n) {
     var voff=this.state.toc[n].voff;
     this.dosearch(null,null,voff);
   }, 
   showPage:function(f,p,hideResultlist) {
-    kse.highlightPage(this.state.db,f,p,{q:this.state.q},function(data){
+
+    kse.highlightPage(this.state.db,f,p,{ q:this.state.tofind},function(data){
       this.setState({bodytext:data});
       if (hideResultlist) this.setState({res:[]});
     });
@@ -95,6 +89,21 @@ var main = React.createClass({
   showText:function(n) {
     var res=kse.vpos2filepage(this.state.db,this.state.toc[n].voff);
     this.showPage(res.file,res.page,true);
+  },
+  gotopage:function(vpos){
+    var res=kse.vpos2filepage(this.state.db,vpos);
+    this.showPage(res.file,res.page-1,false);
+  },
+  nextpage:function() {
+    var page=this.state.bodytext.page+1;
+    this.showPage(this.state.bodytext.file,page);
+    console.log(this.showPage(this.state.bodytext.file,page),"next");
+  },
+  prevpage:function() {
+    var page=this.state.bodytext.page-1;
+    if (page<0) page=0;
+    this.showPage(this.state.bodytext.file,page);
+    console.log(this.showPage(this.state.bodytext.file,page),"prev");
   },
   render: function() {
     if (!this.state.quota) { // install required db
@@ -108,11 +117,12 @@ var main = React.createClass({
       return (
         <div>
           <div className="col-md-4">
+            <input onInput={this.dosearch_toc} ref="tofind_toc"></input>
             <stacktoc showText={this.showText} showExcerpt={this.showExcerpt} hits={this.state.res.rawresult} data={this.state.toc}/>// 顯示目錄
           </div>
           <div className="col-md-8">
             <div className="text">
-            <showtext pagename={pagename} text={text} />
+            <showtext pagename={pagename} text={text} nextpage={this.nextpage} prevpage={this.prevpage}/>
             </div>
             <div className="search">
               <br/><input ref="tofind" defaultValue="དགེ"></input>
@@ -122,10 +132,10 @@ var main = React.createClass({
               3. <a href='#' onClick={this.dosearch_ex} >འགྱུར</a>
               4. <a href='#' onClick={this.dosearch_ex} >བདག</a>
               5. <a href='#' onClick={this.dosearch_ex} >དགའ</a>
-              <results res={this.state.res} tofind={this.state.tofind} gotopage={this.gotopage}/>
+              <resultlist res={this.state.res} tofind={this.state.tofind} gotopage={this.gotopage}/>
               <span>{this.state.elapse}</span>
 
-              <resultlist gotopage={this.gotopage} res={this.state.res}/>
+
             </div>
           </div>
         </div>

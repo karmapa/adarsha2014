@@ -96,13 +96,13 @@ var main = React.createClass({
   },
   nextpage:function() {
     var page=this.state.bodytext.page+1;
-    this.showPage(this.state.bodytext.file,page);
+    this.showPage(this.state.bodytext.file,page,false);
     console.log(this.showPage(this.state.bodytext.file,page),"next");
   },
   prevpage:function() {
     var page=this.state.bodytext.page-1;
     if (page<0) page=0;
-    this.showPage(this.state.bodytext.file,page);
+    this.showPage(this.state.bodytext.file,page,false);
     console.log(this.showPage(this.state.bodytext.file,page),"prev");
   },
   render: function() {

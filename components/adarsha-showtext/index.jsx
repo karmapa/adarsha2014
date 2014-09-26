@@ -12,7 +12,7 @@ var controls = React.createClass({
     render: function() {   
      return <div>
               <button onClick={this.props.prev}>←</button>
-               <input type="text" ref="pagename" defaultValue={this.state.pagename}></input>
+               <input type="text" ref="pagename" defaultValue={this.state.value}></input>
               <button onClick={this.props.next}>→</button>
               </div>
   }  

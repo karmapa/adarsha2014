@@ -16,7 +16,8 @@
     "adarsha/resultlist": "*",
     "adarsha/api": "*",
     "ksanaforge/stacktoc": "*",
-    "adarsha/showtext": "*"
+    "adarsha/showtext": "*",
+    "adarsha/renderItem": "*"
   },
   "development": {},
   "paths": [

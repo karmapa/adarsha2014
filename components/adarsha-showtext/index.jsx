@@ -9,11 +9,19 @@ var controls = React.createClass({
       this.state.pagename=nextProps.pagename;
       return (nextProps.pagename!=this.props.pagename);
     },
+    updateValue:function(e){
+    var newpagename=this.refs.pagename.getDOMNode().value;
+    var n=newpagename.substr(newpagename.length-1);
+    if(!n.match(/[ab]/)){
+      newpagename = newpagename+"a";
+    }
+    this.props.setpage(newpagename);
+  },  
     render: function() {   
      return <div>
-              <button onClick={this.props.prev}>←</button>
-               <input type="text" ref="pagename" defaultValue={this.state.value}></input>
-              <button onClick={this.props.next}>→</button>
+              <button className="btn btn-success" onClick={this.props.prev}>←</button>              
+                <input type="text" ref="pagename" onChange={this.updateValue} value={this.state.pagename}></input>             
+              <button className="btn btn-success" onClick={this.props.next}>→</button>
               </div>
   }  
 });
@@ -28,7 +36,7 @@ var showtext = React.createClass({
     var pn=this.props.pagename;
     return (
       <div>
-        <controls pagename={this.props.pagename} next={this.props.nextpage} prev={this.props.prevpage}/>
+        <controls pagename={this.props.pagename} next={this.props.nextpage} prev={this.props.prevpage} setpage={this.props.setpage}/>
        
         <div dangerouslySetInnerHTML={{__html: this.props.text}} />
       </div>

@@ -154,53 +154,54 @@ var main = React.createClass({
       if (this.state.bodytext) {
         text=this.state.bodytext.text;
         pagename=this.state.bodytext.pagename;
+        console.log(this.state.bodytext);
     }
-      return (
-        <div>
-          <div className="col-md-4">
-        
-            <ul className="nav nav-tabs" role="tablist">
-              <li className="active"><a href="#Catalog" role="tab" data-toggle="tab">Catalog</a></li>
-              <li><a href="#Search" role="tab" data-toggle="tab">Title Search</a></li>
-            </ul>
+    return (
+      <div>
+        <div className="col-md-4">
+      
+          <ul className="nav nav-tabs" role="tablist">
+            <li className="active"><a href="#Catalog" role="tab" data-toggle="tab">Catalog</a></li>
+            <li><a href="#Search" role="tab" data-toggle="tab">Title Search</a></li>
+          </ul>
 
-            <div className="tab-content">
-              <div className="tab-pane active" id="Catalog">               
-                <stacktoc showText={this.showText} showExcerpt={this.showExcerpt} hits={this.state.res.rawresult} data={this.state.toc}/>// 顯示目錄
-              </div>
+          <div className="tab-content">
+            <div className="tab-pane active" id="Catalog">               
+              <stacktoc showText={this.showText} showExcerpt={this.showExcerpt} hits={this.state.res.rawresult} data={this.state.toc}/>// 顯示目錄
+            </div>
 
-              <div className="tab-pane" id="Search">
-                {this.renderinputs("title")}
-                <renderItem data={this.state.toc_result} />
-              </div>
-            
-            </div>          
+            <div className="tab-pane" id="Search">
+              {this.renderinputs("title")}
+              <renderItem data={this.state.toc_result} gotopage={this.gotopage}/>
+            </div>
+          
+          </div>          
+        </div>
+
+        <div className="col-md-8 ">
+          <div className="text">
+          <showtext pagename={pagename} text={text} nextpage={this.nextpage} prevpage={this.prevpage} setpage={this.setPage}/>
           </div>
-
-          <div className="col-md-8 ">
-            <div className="text">
-            <showtext pagename={pagename} text={text} nextpage={this.nextpage} prevpage={this.prevpage} setpage={this.setPage}/>
+          <div className="search">
+            <br/>
+            <div className="col-lg-3" >
+            
+            {this.renderinputs("text")}
             </div>
-            <div className="search">
-              <br/>
-              <div className="col-lg-3" >
-              
-              {this.renderinputs("text")}
-              </div>
-              
-                   Search Example:   1.<a href='#' onClick={this.dosearch_ex} >བྱས</a>
-              2. <a href='#' onClick={this.dosearch_ex} >གནས</a>
-              3. <a href='#' onClick={this.dosearch_ex} >འགྱུར</a>
-              4. <a href='#' onClick={this.dosearch_ex} >བདག</a>
-              5. <a href='#' onClick={this.dosearch_ex} >དགེ</a>
-              <br/><br/><br/>
-              <resultlist res={this.state.res} tofind={this.state.tofind} gotopage={this.gotopage}/>
-              <span>{this.state.elapse}</span>
+            
+                 Search Example:   1.<a href='#' onClick={this.dosearch_ex} >བྱས</a>
+            2. <a href='#' onClick={this.dosearch_ex} >གནས</a>
+            3. <a href='#' onClick={this.dosearch_ex} >འགྱུར</a>
+            4. <a href='#' onClick={this.dosearch_ex} >བདག</a>
+            5. <a href='#' onClick={this.dosearch_ex} >དགེ</a>
+            <br/><br/><br/>
+            <resultlist res={this.state.res} tofind={this.state.tofind} gotopage={this.gotopage}/>
+            <span>{this.state.elapse}</span>
 
 
-            </div>
           </div>
         </div>
+      </div>
       );
     }
   }

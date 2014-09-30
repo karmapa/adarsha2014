@@ -7,11 +7,14 @@ var renderItem = React.createClass({
   getInitialState: function() {
     return {bar: "world"};
   },
+  onItemClick:function(e) {
+    var voff=e.target.dataset.voff;
+    this.props.gotopage(voff);
+  },
   renderItem: function(item) {
-    var title=item["text"];
     return (
       <div>
-        <span>{title}</span>
+        <a herf='#' data-voff={item.voff} onClick={this.onItemClick}>{item.text}</a>
       </div>
       )
   },

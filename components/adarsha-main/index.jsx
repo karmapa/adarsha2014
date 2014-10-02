@@ -123,11 +123,14 @@ var main = React.createClass({
   }, 
   showText:function(n) {
     var res=kse.vpos2filepage(this.state.db,this.state.toc[n].voff);
+    console.log(res.file,this.state.toc[n].voff);
     this.showPage(res.file,res.page,true);
   },
   gotopage:function(vpos){
     var res=kse.vpos2filepage(this.state.db,vpos);
     this.showPage(res.file,res.page-1,false);
+    console.log("res:",res);
+    console.log("vpos:",vpos);
   },
   nextpage:function() {
     var page=this.state.bodytext.page+1;

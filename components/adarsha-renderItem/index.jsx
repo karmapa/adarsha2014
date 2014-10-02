@@ -8,13 +8,14 @@ var renderItem = React.createClass({
     return {bar: "world"};
   },
   onItemClick:function(e) {
-    var voff=e.target.dataset.voff;
+    var voff=parseInt(e.target.dataset.voff);
+    console.log(voff);
     this.props.gotopage(voff);
   },
   renderItem: function(item) {
     return (
       <div>
-        <a herf='#' data-voff={item.voff} onClick={this.onItemClick}>{item.text}</a>
+        <a herf='#' className="item" data-voff={item.voff} onClick={this.onItemClick}>{item.text}</a>
       </div>
       )
   },

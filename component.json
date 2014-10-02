@@ -18,7 +18,8 @@
     "ksanaforge/stacktoc": "*",
     "adarsha/showtext": "*",
     "adarsha/renderItem": "*",
-    "adarsha/renderinputs": "*"
+    "adarsha/renderinputs": "*",
+    "adarsha/page2catalog": "*"
   },
   "development": {},
   "paths": [

@@ -19,8 +19,24 @@ var renderItem=Require("renderItem");
 var tibetan=Require("ksana-document").languages.tibetan; 
 
 var main = React.createClass({
+  componentDidMount:function() {
+    var that=this;
+    window.onhashchange = function () {that.goHashTag();}
+    
+  }, 
   getInitialState: function() {
     return {dialog:null,res:{},db:null,toc_result:[]};
+  },
+  encodeHashTag:function(f,p) { //file/page to hash tag
+    var pagename=this.state.db.getFilePageNames(f)[p];
+    return "#"+f+"."+p;
+  },
+  decodeHashTag:function(s) {
+    var fp=s.match(/#(\d)+\.(.*)/);
+    this.setPage(fp[2],fp[1]);
+  },
+  goHashTag:function() {
+    this.decodeHashTag(window.location.hash);
   },
   genToc:function(texts,depths,voffs){
     var out=[{depth:0,text:"Jiang Kangyur"}];
@@ -66,6 +82,7 @@ var main = React.createClass({
     }); //載入目錄
     },this);      
     this.setState({dialog:false,quota:quota,usage:usage});
+    this.goHashTag();
   },
   openFileinstaller:function(autoclose) {
     if (window.location.origin.indexOf("http://127.0.0.1")==0) {
@@ -115,7 +132,7 @@ var main = React.createClass({
     this.dosearch(null,null,voff);
   }, 
   showPage:function(f,p,hideResultlist) {
-
+    window.location.hash = this.encodeHashTag(f,p);
     kse.highlightPage(this.state.db,f,p,{ q:this.state.tofind},function(data){
       this.setState({bodytext:data});
       if (hideResultlist) this.setState({res:[]});

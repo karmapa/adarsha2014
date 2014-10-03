@@ -16,15 +16,21 @@ var controls = React.createClass({
       newpagename = newpagename+"a";
     }
     this.props.setpage(newpagename);
-  },  
+    },
+    page2catalog: function(e){
+      var a=this.refs.pagename.getDOMNode().value;
+      console.log(e.target.dataset.voff);
+    },  
     render: function() {   
      return <div>
               <button className="btn btn-success" onClick={this.props.prev}>←</button>              
                 <input type="text" ref="pagename" onChange={this.updateValue} value={this.state.pagename}></input>             
               <button className="btn btn-success" onClick={this.props.next}>→</button>
+              <button className="btn btn-success" onClick={this.page2catalog}>Catalog</button>
               </div>
   }  
 });
+
 var showtext = React.createClass({
   getInitialState: function() {
     return {bar: "world"};
@@ -37,7 +43,7 @@ var showtext = React.createClass({
     return (
       <div>
         <controls pagename={this.props.pagename} next={this.props.nextpage} prev={this.props.prevpage} setpage={this.props.setpage}/>
-       
+
         <div dangerouslySetInnerHTML={{__html: this.props.text}} />
       </div>
     );

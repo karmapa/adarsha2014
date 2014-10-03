@@ -17,6 +17,7 @@ var stacktoc=Require("stacktoc");  //載入目錄顯示元件
 var showtext=Require("showtext");
 var renderItem=Require("renderItem");
 var tibetan=Require("ksana-document").languages.tibetan; 
+var page2catalog=Require("page2catalog");
 
 var main = React.createClass({
   componentDidMount:function() {
@@ -32,67 +33,14 @@ var main = React.createClass({
     return "#"+f+"."+p;
   },
   decodeHashTag:function(s) {
-    var fp=s.match(/#(\d)+\.(.*)/);
-    this.setPage(fp[2],fp[1]);
+    var fp=s.match(/#(\d+)\.(.*)/);
+    var p=fp[2];
+    var file=fp[1];
+    var pagename=this.state.db.getFilePageNames(file)[p];   
+    this.setPage(pagename,file);
   },
   goHashTag:function() {
     this.decodeHashTag(window.location.hash);
-  },
-  genToc:function(texts,depths,voffs){
-    var out=[{depth:0,text:"Jiang Kangyur"}];
-    for(var i=0; i<texts.length; i++){
-      out.push({text:texts[i],depth:depths[i],voff:voffs[i]});
-    }
-    return out; 
-  },// 轉換為stacktoc 目錄格式
-  clear:function() {
-    var tofind=this.refs.tofind.getDOMNode();
-    tofind.value="";
-    tofind.focus();
-  },
-  renderinputs:function(searcharea) {  // input interface for search
-    if (this.state.db) {
-      if(searcharea == "text"){
-        return (    
-          <div><input className="form-control" onInput={this.dosearch} ref="tofind" defaultValue="byang chub"></input>
-          <button onClick={this.clear} className="btn btn-danger">x</button><span className="wylie">{this.state.wylie}</span>
-          </div>
-          )    
-      }
-      if(searcharea == "title"){
-        return (    
-          <div><input className="form-control" onInput={this.dosearch_toc} ref="tofind_toc" defaultValue="byang chub"></input>
-          <span className="wylie">{this.state.wylie_toc}</span>
-          </div>
-          ) 
-      }
-    } else {
-      return <span>loading database....</span>
-    }
-  },   
-  onReady:function(usage,quota) {
-    if (!this.state.db) kde.open("jiangkangyur",function(db){
-        this.setState({db:db});
-    db.get([["fields","head"],["fields","head_depth"],["fields","head_voff"]],function(){
-      var heads=db.get(["fields","head"]);
-      var depths=db.get(["fields","head_depth"]);
-      var voffs=db.get(["fields","head_voff"]);
-      var toc=this.genToc(heads,depths,voffs);
-      this.setState({toc:toc});
-    }); //載入目錄
-    },this);      
-    this.setState({dialog:false,quota:quota,usage:usage});
-    this.goHashTag();
-  },
-  openFileinstaller:function(autoclose) {
-    if (window.location.origin.indexOf("http://127.0.0.1")==0) {
-      for (var i=0;i<require_kdb.length;i++) {
-        require_kdb[i].url=window.location.origin+"/"+require_kdb[i].filename;  
-      }
-    }
-
-    return <fileinstaller quota="512M" autoclose={autoclose} needed={require_kdb} 
-                     onReady={this.onReady}/>
   },
   dosearch: function(){
     var start=arguments[2];  
@@ -127,6 +75,64 @@ var main = React.createClass({
     this.setState({toc_result:out});  
     console.log(out);
   },
+  clear:function() {
+    var tofind=this.refs.tofind.getDOMNode();
+    tofind.value="";
+    tofind.focus();
+  },
+  renderinputs:function(searcharea) {  // input interface for search
+    if (this.state.db) {
+      if(searcharea == "text"){
+        return (    
+          <div><input className="form-control" onInput={this.dosearch} ref="tofind" defaultValue="byang chub"></input>
+          <button onClick={this.clear} className="btn btn-danger">x</button><span className="wylie">{this.state.wylie}</span>
+          </div>
+          )    
+      }
+      if(searcharea == "title"){
+        return (    
+          <div><input className="form-control" onInput={this.dosearch_toc} ref="tofind_toc" defaultValue="byang chub"></input>
+          <span className="wylie">{this.state.wylie_toc}</span>
+          </div>
+          ) 
+      }
+    } else {
+      return <span>loading database....</span>
+    }
+  },   
+  genToc:function(texts,depths,voffs){
+    var out=[{depth:0,text:"Jiang Kangyur"}];
+    for(var i=0; i<texts.length; i++){
+      out.push({text:texts[i],depth:depths[i],voff:voffs[i]});
+    }
+    return out; 
+  },// 轉換為stacktoc 目錄格式
+  onReady:function(usage,quota) {
+    if (!this.state.db) kde.open("jiangkangyur",function(db){
+        this.setState({db:db});
+        db.get([["fields","head"],["fields","head_depth"],["fields","head_voff"]],function(){
+          var heads=db.get(["fields","head"]);
+          var depths=db.get(["fields","head_depth"]);
+          var voffs=db.get(["fields","head_voff"]);
+          var toc=this.genToc(heads,depths,voffs);
+          this.setState({toc:toc});
+          this.goHashTag();
+        }); //載入目錄
+    },this);    
+      
+    this.setState({dialog:false,quota:quota,usage:usage});
+    
+  },
+  openFileinstaller:function(autoclose) {
+    if (window.location.origin.indexOf("http://127.0.0.1")==0) {
+      for (var i=0;i<require_kdb.length;i++) {
+        require_kdb[i].url=window.location.origin+"/"+require_kdb[i].filename;  
+      }
+    }
+
+    return <fileinstaller quota="512M" autoclose={autoclose} needed={require_kdb} 
+                     onReady={this.onReady}/>
+  },
   showExcerpt:function(n) {
     var voff=this.state.toc[n].voff;
     this.dosearch(null,null,voff);
@@ -135,8 +141,9 @@ var main = React.createClass({
     window.location.hash = this.encodeHashTag(f,p);
     kse.highlightPage(this.state.db,f,p,{ q:this.state.tofind},function(data){
       this.setState({bodytext:data});
-      if (hideResultlist) this.setState({res:[]});
+      if (hideResultlist) this.setState({res:[]});     
     });
+
   }, 
   showText:function(n) {
     var res=kse.vpos2filepage(this.state.db,this.state.toc[n].voff);

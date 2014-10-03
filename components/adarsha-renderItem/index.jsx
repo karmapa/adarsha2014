@@ -9,7 +9,7 @@ var renderItem = React.createClass({
   },
   onItemClick:function(e) {
     var voff=parseInt(e.target.dataset.voff);
-    console.log(voff);
+    <span>{e.target.innerHTML}</span>
     this.props.gotopage(voff);
   },
   renderItem: function(item) {

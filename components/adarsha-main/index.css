@@ -1,4 +1,13 @@
 .main {}
 /*.form-control{border-radius: 0%;}*/
-.text {white-space: pre;}
+.search{
+	height: 70%;
+	overflow-y:scroll;}
+.text {white-space: pre;
+
+	height: 30%;
+	overflow-y:scroll;}
+.col-md-4{
+	overflow-y:scroll;
+	position: relative;}
 a{color:#178918;}

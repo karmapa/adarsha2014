@@ -173,6 +173,13 @@ var main = React.createClass({
     var p=pagenames.indexOf(newpagename);
     if (p>-1) this.showPage(file,p);
   },
+  // filepage2vpos:function() {
+  //   var offsets=this.state.db.getFilePageOffsets(this.state.bodytext.file);
+  //   return offsets[this.state.bodytext.page];
+  // },
+  syncToc:function(voff) {
+    this.setState({goVoff:voff});
+  },  
   render: function() {
     if (!this.state.quota) { // install required db
         return this.openFileinstaller(true);
@@ -186,29 +193,29 @@ var main = React.createClass({
     return (
       <div>
         <div className="col-md-4">
-      
-          <ul className="nav nav-tabs" role="tablist">
-            <li className="active"><a href="#Catalog" role="tab" data-toggle="tab">Catalog</a></li>
-            <li><a href="#Search" role="tab" data-toggle="tab">Title Search</a></li>
-          </ul>
+            <ul className="nav nav-tabs" role="tablist">
+              <li className="active"><a href="#Catalog" role="tab" data-toggle="tab">Catalog</a></li>
+              <li><a href="#Search" role="tab" data-toggle="tab">Title Search</a></li>
+            </ul>
 
-          <div className="tab-content">
-            <div className="tab-pane active" id="Catalog">               
-              <stacktoc showText={this.showText} showExcerpt={this.showExcerpt} hits={this.state.res.rawresult} data={this.state.toc}/>// 顯示目錄
-            </div>
+            <div className="tab-content">
+              <div className="tab-pane active" id="Catalog">               
+                <stacktoc showText={this.showText} showExcerpt={this.showExcerpt} hits={this.state.res.rawresult} data={this.state.toc} goVoff={this.state.goVoff} />// 顯示目錄
+              </div>
 
-            <div className="tab-pane" id="Search">
-              {this.renderinputs("title")}
-              <renderItem data={this.state.toc_result} gotopage={this.gotopage}/>
-            </div>
-          
-          </div>          
+              <div className="tab-pane" id="Search">
+                {this.renderinputs("title")}
+                <renderItem data={this.state.toc_result} gotopage={this.gotopage}/>
+              </div>          
+            </div>                     
         </div>
 
         <div className="col-md-8 ">
+
           <div className="text">
-          <showtext pagename={pagename} text={text} nextpage={this.nextpage} prevpage={this.prevpage} setpage={this.setPage}/>
+          <showtext pagename={pagename} text={text} nextpage={this.nextpage} prevpage={this.prevpage} setpage={this.setPage} db={this.state.db} toc={this.state.toc} genToc={this.genToc} syncToc={this.syncToc}/>
           </div>
+
           <div className="search">
             <br/>
             <div className="col-lg-3" >
@@ -227,6 +234,9 @@ var main = React.createClass({
 
 
           </div>
+
+
+
         </div>
       </div>
       );

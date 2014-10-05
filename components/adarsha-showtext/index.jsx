@@ -17,16 +17,29 @@ var controls = React.createClass({
     }
     this.props.setpage(newpagename);
     },
-    page2catalog: function(e){
-      var a=this.refs.pagename.getDOMNode().value;
-      console.log(e.target.dataset.voff);
-    },  
-    render: function() {   
+    gotoToc: function(e){
+      var s=window.location.hash;
+      var fp=s.match(/#(\d+)\.(.*)/);
+      var page=parseInt(fp[2]);
+      var file=parseInt(fp[1]);
+      // var out=[];
+      // var pagename=this.props.db.getFilePageNames(file)[page];
+      var voff=this.props.db.getFilePageOffsets(file)[page];
+      // this.props.toc.map(function(item){
+      //   if(voff<item.voff){
+      //     out.push(item);
+      //   }
+      // },this);
+      // console.log("pagename:",pagename,"voff:",voff);
+      this.props.syncToc(voff);
+       
+    },
+    render: function() { 
      return <div>
               <button className="btn btn-success" onClick={this.props.prev}>←</button>              
                 <input type="text" ref="pagename" onChange={this.updateValue} value={this.state.pagename}></input>             
               <button className="btn btn-success" onClick={this.props.next}>→</button>
-              <button className="btn btn-success" onClick={this.page2catalog}>Catalog</button>
+              <button className="btn btn-success" onClick={this.gotoToc}>Catalog</button>
               </div>
   }  
 });
@@ -42,7 +55,7 @@ var showtext = React.createClass({
     var pn=this.props.pagename;
     return (
       <div>
-        <controls pagename={this.props.pagename} next={this.props.nextpage} prev={this.props.prevpage} setpage={this.props.setpage}/>
+        <controls pagename={this.props.pagename} next={this.props.nextpage} prev={this.props.prevpage} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} genToc={this.props.genToc} syncToc={this.props.syncToc}/>
 
         <div dangerouslySetInnerHTML={{__html: this.props.text}} />
       </div>

@@ -17,22 +17,13 @@ var controls = React.createClass({
     }
     this.props.setpage(newpagename);
     },
-    gotoToc: function(e){
-      var s=window.location.hash;
-      var fp=s.match(/#(\d+)\.(.*)/);
-      var page=parseInt(fp[2]);
-      var file=parseInt(fp[1]);
-      // var out=[];
-      // var pagename=this.props.db.getFilePageNames(file)[page];
-      var voff=this.props.db.getFilePageOffsets(file)[page];
-      // this.props.toc.map(function(item){
-      //   if(voff<item.voff){
-      //     out.push(item);
-      //   }
-      // },this);
-      // console.log("pagename:",pagename,"voff:",voff);
-      this.props.syncToc(voff);
-       
+    gotoToc: function(){
+      // var s=window.location.hash;
+      // var fp=s.match(/#(\d+)\.(.*)/);
+      // var page=parseInt(fp[2]);
+      // var file=parseInt(fp[1]);
+      // var voff=this.props.db.getFilePageOffsets(file)[page];
+      this.props.syncToc();       
     },
     render: function() { 
      return <div>

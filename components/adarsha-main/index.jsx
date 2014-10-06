@@ -29,6 +29,7 @@ var main = React.createClass({
     return {dialog:null,res:{},db:null,toc_result:[]};
   },
   encodeHashTag:function(f,p) { //file/page to hash tag
+    //var file=parseInt(f)+1;
     var pagename=this.state.db.getFilePageNames(f)[p];
     return "#"+f+"."+p;
   },
@@ -153,8 +154,6 @@ var main = React.createClass({
   gotopage:function(vpos){
     var res=kse.vpos2filepage(this.state.db,vpos);
     this.showPage(res.file,res.page-1,false);
-    console.log("res:",res);
-    console.log("vpos:",vpos);
   },
   nextpage:function() {
     var page=this.state.bodytext.page+1;
@@ -173,13 +172,13 @@ var main = React.createClass({
     var p=pagenames.indexOf(newpagename);
     if (p>-1) this.showPage(file,p);
   },
-  // filepage2vpos:function() {
-  //   var offsets=this.state.db.getFilePageOffsets(this.state.bodytext.file);
-  //   return offsets[this.state.bodytext.page];
-  // },
-  syncToc:function(voff) {
-    this.setState({goVoff:voff});
-  },  
+  filepage2vpos:function() {
+    var offsets=this.state.db.getFilePageOffsets(this.state.bodytext.file);
+    return offsets[this.state.bodytext.page];
+  },
+  syncToc:function() {
+    this.setState({goVoff:this.filepage2vpos()});
+  }, 
   render: function() {
     if (!this.state.quota) { // install required db
         return this.openFileinstaller(true);

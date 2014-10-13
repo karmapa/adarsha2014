@@ -2,36 +2,35 @@
 
 //var othercomponent=Require("other"); 
 var controls = React.createClass({  
-    getInitialState: function() {
-      return {value: this.props.pagename};
-    },
-    shouldComponentUpdate:function(nextProps,nextState) {
-      this.state.pagename=nextProps.pagename;
-      return (nextProps.pagename!=this.props.pagename);
-    },
-    updateValue:function(e){
+  getInitialState: function() {
+    return {value: this.props.pagename};
+  },
+  shouldComponentUpdate:function(nextProps,nextState) {
+    this.state.pagename=nextProps.pagename;
+    this.refs.pagename.getDOMNode().value=nextProps.pagename;
+    return (nextProps.pagename!=this.props.pagename);
+  },
+  updateValue:function(e){
+    if(e.key!="Enter") return;
     var newpagename=this.refs.pagename.getDOMNode().value;
     var n=newpagename.substr(newpagename.length-1);
     if(!n.match(/[ab]/)){
       newpagename = newpagename+"a";
     }
     this.props.setpage(newpagename);
-    },
-    gotoToc: function(){
-      // var s=window.location.hash;
-      // var fp=s.match(/#(\d+)\.(.*)/);
-      // var page=parseInt(fp[2]);
-      // var file=parseInt(fp[1]);
-      // var voff=this.props.db.getFilePageOffsets(file)[page];
-      this.props.syncToc();       
-    },
-    render: function() { 
-     return <div>
-              <button className="btn btn-success" onClick={this.props.prev}>←</button>              
-                <input type="text" ref="pagename" onChange={this.updateValue} value={this.state.pagename}></input>             
-              <button className="btn btn-success" onClick={this.props.next}>→</button>
-              <button className="btn btn-success" onClick={this.gotoToc}>Catalog</button>
-              </div>
+  },
+  gotoToc: function(){
+    this.props.syncToc();       
+  },
+  render: function() { 
+   
+   return <div>
+            <button className="btn btn-success" onClick={this.props.prev}>←</button>              
+            <input type="text" ref="pagename" onKeyUp={this.updateValue}></input>             
+            <button className="btn btn-success" onClick={this.props.next}>→</button>
+            <button className="btn btn-success" onClick={this.gotoToc}>Catalog</button>
+            <a target="_new" href={"http://127.0.0.1:2556/pedurmacat/#"+this.props.pagename}>Compare</a>
+          </div>
   }  
 });
 

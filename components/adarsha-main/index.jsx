@@ -18,14 +18,14 @@ var showtext=Require("showtext");
 var renderItem=Require("renderItem");
 var tibetan=Require("ksana-document").languages.tibetan; 
 var page2catalog=Require("page2catalog");
-
+var version="v1.0.0"
 var main = React.createClass({
   componentDidMount:function() {
     var that=this;
-    //window.onhashchange = function () {that.goHashTag();}
-    
+    //window.onhashchange = function () {that.goHashTag();}   
   }, 
   getInitialState: function() {
+    document.title=version+"-PNCDEMO";
     return {dialog:null,res:{},bodytext:{file:0,page:0},db:null,toc_result:[]};
   },
   encodeHashTag:function(file,p) { //file/page to hash tag
@@ -161,10 +161,10 @@ var main = React.createClass({
     console.log(this.showPage(this.state.bodytext.file,page),"prev");
   },
   setPage:function(newpagename,file) {
-    file=file||this.state.bodytext.file; 
-    var pagenames=this.state.db.getFilePageNames(file);
-    var p=pagenames.indexOf(newpagename);
-    if (p>-1) this.showPage(file,p);
+    var fp=this.state.db.findPage(newpagename);
+    if (fp.length){
+      this.showPage(fp[0].file,fp[0].page);
+    }
   },
   filepage2vpos:function() {
     var offsets=this.state.db.getFilePageOffsets(this.state.bodytext.file);

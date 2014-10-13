@@ -22,21 +22,21 @@ var page2catalog=Require("page2catalog");
 var main = React.createClass({
   componentDidMount:function() {
     var that=this;
-    window.onhashchange = function () {that.goHashTag();}
+    //window.onhashchange = function () {that.goHashTag();}
     
   }, 
   getInitialState: function() {
-    return {dialog:null,res:{},db:null,toc_result:[]};
+    return {dialog:null,res:{},bodytext:{file:0,page:0},db:null,toc_result:[]};
   },
-  encodeHashTag:function(f,p) { //file/page to hash tag
-    //var file=parseInt(f)+1;
+  encodeHashTag:function(file,p) { //file/page to hash tag
+    var f=parseInt(file)+1;
     var pagename=this.state.db.getFilePageNames(f)[p];
     return "#"+f+"."+p;
   },
   decodeHashTag:function(s) {
     var fp=s.match(/#(\d+)\.(.*)/);
-    var p=fp[2];
-    var file=fp[1];
+    var p=parseInt(fp[2]);
+    var file=parseInt(fp[1])-1;
     var pagename=this.state.db.getFilePageNames(file)[p];   
     this.setPage(pagename,file);
   },
@@ -76,17 +76,11 @@ var main = React.createClass({
     this.setState({toc_result:out});  
     console.log(out);
   },
-  clear:function() {
-    var tofind=this.refs.tofind.getDOMNode();
-    tofind.value="";
-    tofind.focus();
-  },
   renderinputs:function(searcharea) {  // input interface for search
     if (this.state.db) {
       if(searcharea == "text"){
         return (    
           <div><input className="form-control" onInput={this.dosearch} ref="tofind" defaultValue="byang chub"></input>
-          <button onClick={this.clear} className="btn btn-danger">x</button><span className="wylie">{this.state.wylie}</span>
           </div>
           )    
       }
@@ -198,12 +192,18 @@ var main = React.createClass({
             </ul>
 
             <div className="tab-content">
-              <div className="tab-pane active" id="Catalog">               
+              <div className="tab-pane fade in active" id="Catalog">               
                 <stacktoc showText={this.showText} showExcerpt={this.showExcerpt} hits={this.state.res.rawresult} data={this.state.toc} goVoff={this.state.goVoff} />// 顯示目錄
               </div>
 
-              <div className="tab-pane" id="Search">
+              <div className="tab-pane fade" id="Search">
                 {this.renderinputs("title")}
+                <label className="checkbox-inline">
+                  <input type="checkbox" id="head1" value="head1">Sutra Name</input>
+                </label>
+                <label className="checkbox-inline">
+                  <input type="checkbox" id="head2" value="head2">Kacha</input>
+                </label>
                 <renderItem data={this.state.toc_result} gotopage={this.gotopage}/>
               </div>          
             </div>                     

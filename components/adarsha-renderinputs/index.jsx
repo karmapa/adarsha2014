@@ -24,8 +24,8 @@ var renderinputs = React.createClass({
     if (this.props.db) {
       if(this.props.searcharea == "text"){
         return (    
-          <div><input className="form-control" onInput={this.props.dosearch} ref="tofind" defaultValue="byang chub"></input>
-          <button onClick={this.clear} className="btn btn-danger">x</button><span className="wylie">{this.state.wylie}</span>
+          <div><input className="form-control" onInput={this.props.dosearch} ref="tofind" defaultValue="byang chub m"></input>
+          <button onClick={this.clear} title="clear input box" className="btn btn-danger">xl</button><span className="wylie">{this.state.wylie}</span>
           </div>
           )    
       }

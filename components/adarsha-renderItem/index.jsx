@@ -16,7 +16,7 @@ var renderItem = React.createClass({
     return (
       <div>
         <a herf='#' className="item" data-voff={item.voff} onClick={this.onItemClick}>{item.text}</a>
-      </div>
+      </div> 
       )
   },
   render: function() {

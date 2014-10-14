@@ -147,7 +147,7 @@ var main = React.createClass({
   },
   gotopage:function(vpos){
     var res=kse.vpos2filepage(this.state.db,vpos);
-    this.showPage(res.file,res.page-1,false);
+    this.showPage(res.file,res.page,false);
   },
   nextpage:function() {
     var page=this.state.bodytext.page+1;

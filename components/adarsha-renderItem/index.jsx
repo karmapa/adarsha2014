@@ -15,7 +15,7 @@ var renderItem = React.createClass({
   renderItem: function(item) {
     return (
       <div>
-        <a herf='#' className="item" data-voff={item.voff} onClick={this.onItemClick}>{item.text}</a>
+        <li><a herf='#' className="item" data-voff={item.voff} onClick={this.onItemClick}>{item.text}</a></li>
       </div> 
       )
   },

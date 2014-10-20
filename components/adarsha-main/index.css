@@ -1,10 +1,13 @@
-.main {position: fixed;}
+.main {
+	
+}
 /*.form-control{border-radius: 0%;}*/
 
 .search{
 	}
 
 .text {white-space: pre;
+	font-family: ctrc-uchen;
 	}
 
 .col-md-4{

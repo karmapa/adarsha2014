@@ -9,7 +9,7 @@ var resultlist=React.createClass({  //should search result
     var tofind=this.props.tofind;
     return this.props.res.excerpt.map(function(r,i){ // excerpt is an array 
       var t = new RegExp(tofind,"g"); 
-      r.text=r.text.replace(t,function(tofind){return "<span class='tofind'>"+tofind+"</span>"});
+      r.text=r.text.replace(t,function(tofind){return "<hl>"+tofind+"</hl>"});
       return <div data-vpos={r.hits[0][0]}>
       <a onClick={this.gotopage} className="pagename">{r.pagename}</a>
         <div className="resultitem" dangerouslySetInnerHTML={{__html:r.text}}></div>

@@ -5,7 +5,7 @@
 var require_kdb=[{ 
   filename:"jiangkangyur.kdb"  , 
   url:"http://ya.ksana.tw/kdb/jiangkangyur.kdb" , desc:"jiangkangyur"
-}];  
+}];
 //var othercomponent=Require("other"); 
 var bootstrap=Require("bootstrap");  
 var resultlist=Require("resultlist");
@@ -18,7 +18,7 @@ var showtext=Require("showtext");
 var renderItem=Require("renderItem");
 var tibetan=Require("ksana-document").languages.tibetan; 
 var page2catalog=Require("page2catalog");
-var version="v1.0.0"
+var version="v1.0.03"
 var main = React.createClass({
   componentDidMount:function() {
     var that=this;
@@ -120,11 +120,8 @@ var main = React.createClass({
   },
   openFileinstaller:function(autoclose) {
     if (window.location.origin.indexOf("http://127.0.0.1")==0) {
-      for (var i=0;i<require_kdb.length;i++) {
-        require_kdb[i].url=window.location.origin+"/"+require_kdb[i].filename;  
-      }
+      require_kdb[0].url=window.location.origin+window.location.pathname+"jiangkangyur.kdb";
     }
-
     return <fileinstaller quota="512M" autoclose={autoclose} needed={require_kdb} 
                      onReady={this.onReady}/>
   },
@@ -188,7 +185,8 @@ var main = React.createClass({
         <div className="col-md-4">
             <ul className="nav nav-tabs" role="tablist">
               <li className="active"><a href="#Catalog" role="tab" data-toggle="tab">Catalog</a></li>
-              <li><a href="#Search" role="tab" data-toggle="tab">Title Search</a></li>
+              <li><a href="#SearchTitle" role="tab" data-toggle="tab">Title Search</a></li>
+              <li><a href="#SearchText" role="tab" data-toggle="tab">Texts Search</a></li>
             </ul>
 
             <div className="tab-content">
@@ -196,7 +194,7 @@ var main = React.createClass({
                 <stacktoc showText={this.showText} showExcerpt={this.showExcerpt} hits={this.state.res.rawresult} data={this.state.toc} goVoff={this.state.goVoff} />// 顯示目錄
               </div>
 
-              <div className="tab-pane fade" id="Search">
+              <div className="tab-pane fade" id="SearchTitle">
                 {this.renderinputs("title")}
                 <label className="checkbox-inline">
                   <input type="checkbox" id="head1" value="head1">Sutra Name</input>
@@ -205,37 +203,27 @@ var main = React.createClass({
                   <input type="checkbox" id="head2" value="head2">Kacha</input>
                 </label>
                 <renderItem data={this.state.toc_result} gotopage={this.gotopage}/>
-              </div>          
+              </div> 
+
+              <div className="tab-pane fade" id="SearchText">
+                {this.renderinputs("text")}
+                
+                     Search Example:   1.<a href='#' onClick={this.dosearch_ex} >བྱས</a>
+                2. <a href='#' onClick={this.dosearch_ex} >གནས</a>
+                3. <a href='#' onClick={this.dosearch_ex} >འགྱུར</a>
+                4. <a href='#' onClick={this.dosearch_ex} >བདག</a>
+                5. <a href='#' onClick={this.dosearch_ex} >དགེ</a>
+                <br/><br/><br/>
+                <resultlist res={this.state.res} tofind={this.state.tofind} gotopage={this.gotopage}/>
+                <span>{this.state.elapse}</span>
+              </div>         
             </div>                     
         </div>
 
         <div className="col-md-8 ">
-
           <div className="text">
           <showtext pagename={pagename} text={text} nextpage={this.nextpage} prevpage={this.prevpage} setpage={this.setPage} db={this.state.db} toc={this.state.toc} genToc={this.genToc} syncToc={this.syncToc}/>
           </div>
-
-          <div className="search">
-            <br/>
-            <div className="col-lg-3" >
-            
-            {this.renderinputs("text")}
-            </div>
-            
-                 Search Example:   1.<a href='#' onClick={this.dosearch_ex} >བྱས</a>
-            2. <a href='#' onClick={this.dosearch_ex} >གནས</a>
-            3. <a href='#' onClick={this.dosearch_ex} >འགྱུར</a>
-            4. <a href='#' onClick={this.dosearch_ex} >བདག</a>
-            5. <a href='#' onClick={this.dosearch_ex} >དགེ</a>
-            <br/><br/><br/>
-            <resultlist res={this.state.res} tofind={this.state.tofind} gotopage={this.gotopage}/>
-            <span>{this.state.elapse}</span>
-
-
-          </div>
-
-
-
         </div>
       </div>
       );

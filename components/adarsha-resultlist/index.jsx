@@ -14,7 +14,7 @@ var resultlist=React.createClass({  //should search result
       <a onClick={this.gotopage} className="pagename">{r.pagename}</a>
         <div className="resultitem" dangerouslySetInnerHTML={{__html:r.text}}></div>
       </div>
-    },this); 
+    },this);
   }, 
   gotopage:function(e) {
     var vpos=parseInt(e.target.parentNode.dataset['vpos']);
@@ -23,7 +23,7 @@ var resultlist=React.createClass({  //should search result
   render:function() {
     if (this.props.res) {
       if (this.props.res.excerpt&&this.props.res.excerpt.length) {
-          return <div>{this.show()}</div>
+          return <div className="results">{this.show()}</div>
           debugger;
       } else {
         return <div>Not found</div>

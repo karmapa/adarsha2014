@@ -1,1 +1,5 @@
-.showtext {}
+.showtext {font-family: ctrc-uchen;}
+.text {line-height: 26px;
+}
+pb:after{content: attr(n);
+	}

@@ -18,14 +18,14 @@ var showtext=Require("showtext");
 var renderItem=Require("renderItem");
 var tibetan=Require("ksana-document").languages.tibetan; 
 var page2catalog=Require("page2catalog");
-var version="v1.0.03"
+var version="v0.0.24"
 var main = React.createClass({
   componentDidMount:function() {
     var that=this;
     //window.onhashchange = function () {that.goHashTag();}   
   }, 
   getInitialState: function() {
-    document.title=version+"-PNCDEMO";
+    document.title=version+"-adarsha";
     return {dialog:null,res:{},bodytext:{file:0,page:0},db:null,toc_result:[]};
   },
   encodeHashTag:function(file,p) { //file/page to hash tag
@@ -49,12 +49,14 @@ var main = React.createClass({
     var tofind=tibetan.romanize.fromWylie(w);
     if (w!=tofind) {
       this.setState({wylie:tofind});
+    } else if(w.indexOf(" ")>-1){
+      tofind=tofind+"་";
     }
     kse.search(this.state.db,tofind,{range:{start:start,maxhit:100}},function(data){ //call search engine          
       this.setState({res:data, tofind:tofind});  
     });
   },
-  dosearch_ex: function(e) {    
+  dosearch_ex: function(e) {
     var tofind=e.target.innerHTML;
     kse.search(this.state.db,tofind,{range:{maxhit:100}},function(data){ //call search engine          
       this.setState({res:data, tofind:tofind});  
@@ -68,13 +70,14 @@ var main = React.createClass({
       this.setState({wylie_toc:tofind_toc});
     }    
     var toc=this.state.toc;
-    out=toc.filter(function(t){
-      if(t["text"].indexOf(tofind_toc)>-1){
-        return t;
+    out=toc.filter(function(te){
+      if(te["text"].indexOf(tofind_toc)>-1 && te["text"].match(tofind_toc)!=""){
+        return te;
       }
     },this);
-    this.setState({toc_result:out});  
-    console.log(out);
+
+    this.setState({toc_result:out});
+
   },
   renderinputs:function(searcharea) {  // input interface for search
     if (this.state.db) {
@@ -129,11 +132,12 @@ var main = React.createClass({
     var voff=this.state.toc[n].voff;
     this.dosearch(null,null,voff);
   }, 
-  showPage:function(f,p,hideResultlist) {
+  showPage:function(f,p,hideResultlist) {    
     window.location.hash = this.encodeHashTag(f,p);
-    kse.highlightPage(this.state.db,f,p,{ q:this.state.tofind},function(data){
-      this.setState({bodytext:data});
-      if (hideResultlist) this.setState({res:[]});     
+    var that=this;
+    kse.highlightFile(this.state.db,f,{q:this.state.tofind},function(data){
+      that.setState({bodytext:data});
+      if (hideResultlist) that.setState({res:[]});     
     });
 
   }, 
@@ -156,6 +160,24 @@ var main = React.createClass({
     if (page<0) page=0;
     this.showPage(this.state.bodytext.file,page,false);
     console.log(this.showPage(this.state.bodytext.file,page),"prev");
+  },
+  nextfile:function() {
+    var file=this.state.bodytext.file+1;
+    var page=this.state.bodytext.page || 1;
+    var han=parseInt(this.state.bodytext.filename.substr(0,3));
+
+    this.showPage(file,page,false);
+    console.log(file,"next");
+  },
+  prevfile:function() {
+    var file=this.state.bodytext.file-1;
+    var page=this.state.bodytext.page || 1;
+    if (file<0) file=0;
+    this.showPage(file,page,false);
+    console.log(file,"prev");
+  },
+  stopfile:function(file) {
+
   },
   setPage:function(newpagename,file) {
     var fp=this.state.db.findPage(newpagename);
@@ -196,12 +218,7 @@ var main = React.createClass({
 
               <div className="tab-pane fade" id="SearchTitle">
                 {this.renderinputs("title")}
-                <label className="checkbox-inline">
-                  <input type="checkbox" id="head1" value="head1">Sutra Name</input>
-                </label>
-                <label className="checkbox-inline">
-                  <input type="checkbox" id="head2" value="head2">Kacha</input>
-                </label>
+                
                 <renderItem data={this.state.toc_result} gotopage={this.gotopage}/>
               </div> 
 
@@ -222,7 +239,7 @@ var main = React.createClass({
 
         <div className="col-md-8 ">
           <div className="text">
-          <showtext pagename={pagename} text={text} nextpage={this.nextpage} prevpage={this.prevpage} setpage={this.setPage} db={this.state.db} toc={this.state.toc} genToc={this.genToc} syncToc={this.syncToc}/>
+          <showtext filename={this.state.bodytext.filename} pagename={pagename} text={text} nextpage={this.nextpage} prevpage={this.prevpage} nextfile={this.nextfile} prevfile={this.prevfile} setpage={this.setPage} db={this.state.db} toc={this.state.toc} genToc={this.genToc} syncToc={this.syncToc}/>
           </div>
         </div>
       </div>

@@ -1,4 +1,6 @@
 .results {}
+.results{font-family: ctrc-uchen;
+	line-height: 26px;}
 .pagename{cursor: pointer;}
 hl{color:red;}
 hl[n="1"]{color: blue;}

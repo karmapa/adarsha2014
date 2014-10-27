@@ -1,0 +1,36 @@
+{
+ "version": "1",
+ "build": 5,
+ "title": "Jiang Kangyur",
+ "date": "2014-10-27T04:53:18.045Z",
+ "description": "Jiang kangyur",
+ "files": [
+  "index.html",
+  "build.js",
+  "build.css",
+  "jquery.js",
+  "package.json",
+  "ksana.json",
+  "nodemain.js",
+  "react-with-addons.js",
+  "jiangkangyur.kdb"
+ ],
+ "filedates": [
+  "2014-10-26T03:09:26.000Z",
+  "2014-10-27T03:44:40.000Z",
+  "2014-10-27T03:44:40.000Z",
+  "2014-09-04T10:33:33.000Z",
+  "2014-10-22T01:06:50.000Z",
+  "2014-09-04T10:33:33.000Z",
+  "2014-10-26T03:19:34.000Z"
+ ],
+ "filesizes": [
+  496,
+  468994,
+  123983,
+  277980,
+  379,
+  671712,
+  131605805
+ ]
+}

@@ -1,1 +1,5 @@
 #main {}
+
+
+@font-face { font-family: 'tibetan1'; font-style: normal; font-weight: normal; src: url("../fonts/TibMachUni-1.901.woff"); }
+.text , .tocitem {font-family: 'tibetan1';text-decoration: none;cursor:pointer;}

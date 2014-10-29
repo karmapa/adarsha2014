@@ -10,7 +10,8 @@ jsonp_handler({
   "build.css",
   "jquery.js",
   "package.json",
-  "ksana.json",
+  "ksana.js",
+   "banner.png",
   "nodemain.js",
   "react-with-addons.js",
   "jiangkangyur.kdb"

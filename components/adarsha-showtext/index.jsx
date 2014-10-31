@@ -3,7 +3,7 @@
 //var othercomponent=Require("other"); 
 var controls = React.createClass({
   getInitialState: function() {
-    return {value: this.props.pagename};
+    return {};
   },
 
   gotoToc: function(){
@@ -18,18 +18,61 @@ var controls = React.createClass({
 });
 
 var controlsFile = React.createClass({
- 
   getInitialState: function() {
-    return {value: this.props.pagename};
+    return {address:0};
   },
-  render: function() { 
-   console.log(this.props.filename);
-   
+  filepage2vpos:function(file,page) {
+    var out=[];
+    if(!this.props.db) return 0;
+    var offsets=this.props.db.getFilePageOffsets(file);
+    var voff=offsets[page];
+    var n=this.findByVoff(voff);//toc裡的第幾項
+    var parents=this.enumAncestors(n) || 1;
+    for(var i=0; i<parents.length; i++){
+      out.push(this.props.toc[parents[i]].text);
+    }
+    return out.join("  >  ");
+  },
+  findByVoff: function(voff) {
+    if(!this.props.toc) return 0;
+    for (var i=0;i<this.props.toc.length;i++) {
+      var t=this.props.toc[i];
+      if (t.voff>voff) return i-1;
+    }
+    return 0; //return root node
+  },
+
+  enumAncestors: function(cur) {
+    var toc=this.props.toc;
+    if (!toc || !toc.length) return;
+    //var cur=this.state.cur;
+    if (cur==0) return [];
+    var n=cur-1;
+    var depth=toc[cur].depth - 1;
+    var parents=[];
+    while (n>=0 && depth>0) {
+      if (toc[n].depth==depth) {
+        parents.unshift(n);
+        depth--;
+      }
+      n--;
+    }
+    parents.unshift(0); //first ancestor is root node
+    return parents;
+  },
+  getAddress: function() {
+    var file=this.props.bodytext.file;
+    var page=this.props.page;
+    var res=this.filepage2vpos(file,page);
+   // this.setState({address:res});
+    return res;
+  },
+  render: function() {    
    return <div>
             Bampo
-            <button className="btn btn-success" onClick={this.props.prev}>←</button>                                        
-           
-            <button className="btn btn-success" onClick={this.props.next}>→</button>
+            <a href="#" onClick={this.props.prev}><img width="25" src="http://karmapa.github.io/adarsha/prev.png"/></a>                                                   
+            <a href="#" onClick={this.props.next}><img width="25" src="http://karmapa.github.io/adarsha/next.png"/></a>
+            <br/><span>{this.getAddress()}</span>
           </div>
   }  
 });
@@ -44,22 +87,21 @@ var showtext = React.createClass({
   renderpb: function(s){
     if(typeof s == "undefined") return "";
     s= s.replace(/<pb n="(.*?)">/g,function(m,m1){
-      var link='<a target="_new" href="../adarsha_img/#'+m1+'">'+'<img width=25 src="imageicon.png"/>'+'</a>';
+      var link='<a target="_new" href="../adarsha_img/#'+m1+'">'+'<img width=25 src="http://karmapa.github.io/imageicon.png"/>'+'</a>';
 
-      return m+link;
+      return "<br></br>"+m+link;
     });
     
   return s;
   },
   render: function() {
 
-    var pn=this.props.pagename;
     var text=this.renderpb(this.props.text);
     return (
       <div>
-        <controls pagename={this.props.pagename} next={this.props.nextpage} prev={this.props.prevpage} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} genToc={this.props.genToc} syncToc={this.props.syncToc}/>
-        <controlsFile filename={this.props.filename} pagename={this.props.pagename} next={this.props.nextfile} prev={this.props.prevfile} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} genToc={this.props.genToc} syncToc={this.props.syncToc}/>
-
+        <controls  next={this.props.nextpage} prev={this.props.prevpage} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} genToc={this.props.genToc} syncToc={this.props.syncToc}/>
+        <controlsFile page={this.props.page} bodytext={this.props.bodytext}  next={this.props.nextfile} prev={this.props.prevfile} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} />
+        <br/>
         <div className="text" dangerouslySetInnerHTML={{__html: text}} />
       </div>
     );

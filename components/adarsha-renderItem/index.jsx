@@ -13,9 +13,13 @@ var renderItem = React.createClass({
     this.props.gotopage(voff);
   },
   renderItem: function(item) {
+    var tofind=this.props.tofind_toc;
+    item.text=item.text.replace(tofind,function(t){
+      return '<hl>'+t+"</hl>";
+    });
     return (
       <div>
-        <li><a herf='#' className="item" data-voff={item.voff} onClick={this.onItemClick}>{item.text}</a></li>
+        <li><a herf='#' className="item" data-voff={item.voff} onClick={this.onItemClick} dangerouslySetInnerHTML={{__html:item.text}}></a></li>
       </div> 
       )
   },

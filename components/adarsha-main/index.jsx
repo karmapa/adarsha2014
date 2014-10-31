@@ -18,7 +18,7 @@ var showtext=Require("showtext");
 var renderItem=Require("renderItem");
 var tibetan=Require("ksana-document").languages.tibetan; 
 var page2catalog=Require("page2catalog");
-var version="v0.0.24"
+var version="v0.0.30"
 var main = React.createClass({
   componentDidMount:function() {
     var that=this;
@@ -26,8 +26,13 @@ var main = React.createClass({
   }, 
   getInitialState: function() {
     document.title=version+"-adarsha";
-    return {dialog:null,res:{},bodytext:{file:0,page:0},db:null,toc_result:[]};
+    return {dialog:null,res:{},bodytext:{file:0,page:0},db:null,toc_result:[],page:0};
   },
+  componentDidUpdate:function()  {
+    var ch=document.documentElement.clientHeight;
+    this.refs["text-content"].getDOMNode().style.height=ch+"px";
+    this.refs["tab-content"].getDOMNode().style.height=(ch-40)+"px";
+  },  
   encodeHashTag:function(file,p) { //file/page to hash tag
     var f=parseInt(file)+1;
     var pagename=this.state.db.getFilePageNames(f)[p];
@@ -49,8 +54,6 @@ var main = React.createClass({
     var tofind=tibetan.romanize.fromWylie(w);
     if (w!=tofind) {
       this.setState({wylie:tofind});
-    } else if(w.indexOf(" ")>-1){
-      tofind=tofind+"་";
     }
     kse.search(this.state.db,tofind,{range:{start:start,maxhit:100}},function(data){ //call search engine          
       this.setState({res:data, tofind:tofind});  
@@ -76,7 +79,7 @@ var main = React.createClass({
       }
     },this);
 
-    this.setState({toc_result:out});
+    this.setState({toc_result:out, tofind_toc:tofind_toc});
 
   },
   renderinputs:function(searcharea) {  // input interface for search
@@ -84,6 +87,7 @@ var main = React.createClass({
       if(searcharea == "text"){
         return (    
           <div><input className="form-control" onInput={this.dosearch} ref="tofind" defaultValue="byang chub"></input>
+          <span className="wylie">{this.state.wylie}</span>
           </div>
           )    
       }
@@ -99,7 +103,7 @@ var main = React.createClass({
     }
   },   
   genToc:function(texts,depths,voffs){
-    var out=[{depth:0,text:"Jiang Kangyur"}];
+    var out=[{depth:0,text:"འཇང་བཀའ་འགྱུར།"}];
     for(var i=0; i<texts.length; i++){
       out.push({text:texts[i],depth:depths[i],voff:voffs[i]});
     }
@@ -136,36 +140,19 @@ var main = React.createClass({
     window.location.hash = this.encodeHashTag(f,p);
     var that=this;
     kse.highlightFile(this.state.db,f,{q:this.state.tofind},function(data){
-      that.setState({bodytext:data});
+      that.setState({bodytext:data,page:p});
       if (hideResultlist) that.setState({res:[]});     
     });
 
   }, 
   showText:function(n) {
     var res=kse.vpos2filepage(this.state.db,this.state.toc[n].voff);
-    console.log(res.file,this.state.toc[n].voff);
+    console.log(res.file,res.page,this.state.toc[n].voff);
     this.showPage(res.file,res.page,true);
-  },
-  gotopage:function(vpos){
-    var res=kse.vpos2filepage(this.state.db,vpos);
-    this.showPage(res.file,res.page,false);
-  },
-  nextpage:function() {
-    var page=this.state.bodytext.page+1;
-    this.showPage(this.state.bodytext.file,page,false);
-    console.log(this.showPage(this.state.bodytext.file,page),"next");
-  },
-  prevpage:function() {
-    var page=this.state.bodytext.page-1;
-    if (page<0) page=0;
-    this.showPage(this.state.bodytext.file,page,false);
-    console.log(this.showPage(this.state.bodytext.file,page),"prev");
   },
   nextfile:function() {
     var file=this.state.bodytext.file+1;
     var page=this.state.bodytext.page || 1;
-    var han=parseInt(this.state.bodytext.filename.substr(0,3));
-
     this.showPage(file,page,false);
     console.log(file,"next");
   },
@@ -176,22 +163,13 @@ var main = React.createClass({
     this.showPage(file,page,false);
     console.log(file,"prev");
   },
-  stopfile:function(file) {
-
-  },
   setPage:function(newpagename,file) {
     var fp=this.state.db.findPage(newpagename);
     if (fp.length){
       this.showPage(fp[0].file,fp[0].page);
     }
   },
-  filepage2vpos:function() {
-    var offsets=this.state.db.getFilePageOffsets(this.state.bodytext.file);
-    return offsets[this.state.bodytext.page];
-  },
-  syncToc:function() {
-    this.setState({goVoff:this.filepage2vpos()});
-  }, 
+
   render: function() {
     if (!this.state.quota) { // install required db
         return this.openFileinstaller(true);
@@ -203,15 +181,22 @@ var main = React.createClass({
         console.log(this.state.bodytext);
     }
     return (
-      <div>
+  <div className="row">
+    <div className="col-md-12">
+      <div className="header">
+        <img width="100px" src="http://karmapa.github.io/adarsha/Treasure.png"/>ADARSHA
+
+      </div>
+
+      <div className="row">
         <div className="col-md-4">
             <ul className="nav nav-tabs" role="tablist">
               <li className="active"><a href="#Catalog" role="tab" data-toggle="tab">Catalog</a></li>
               <li><a href="#SearchTitle" role="tab" data-toggle="tab">Title Search</a></li>
-              <li><a href="#SearchText" role="tab" data-toggle="tab">Texts Search</a></li>
+              <li><a href="#SearchText" role="tab" data-toggle="tab">Text Search</a></li>
             </ul>
 
-            <div className="tab-content">
+            <div className="tab-content" ref="tab-content">
               <div className="tab-pane fade in active" id="Catalog">               
                 <stacktoc showText={this.showText} showExcerpt={this.showExcerpt} hits={this.state.res.rawresult} data={this.state.toc} goVoff={this.state.goVoff} />// 顯示目錄
               </div>
@@ -219,7 +204,7 @@ var main = React.createClass({
               <div className="tab-pane fade" id="SearchTitle">
                 {this.renderinputs("title")}
                 
-                <renderItem data={this.state.toc_result} gotopage={this.gotopage}/>
+                <renderItem data={this.state.toc_result} gotopage={this.gotopage} tofind_toc={this.state.tofind_toc} />
               </div> 
 
               <div className="tab-pane fade" id="SearchText">
@@ -236,13 +221,15 @@ var main = React.createClass({
               </div>         
             </div>                     
         </div>
-
+       
         <div className="col-md-8 ">
-          <div className="text">
-          <showtext filename={this.state.bodytext.filename} pagename={pagename} text={text} nextpage={this.nextpage} prevpage={this.prevpage} nextfile={this.nextfile} prevfile={this.prevfile} setpage={this.setPage} db={this.state.db} toc={this.state.toc} genToc={this.genToc} syncToc={this.syncToc}/>
+          <div className="text text-content" ref="text-content">
+          <showtext page={this.state.page}  bodytext={this.state.bodytext} text={text} nextfile={this.nextfile} prevfile={this.prevfile} setpage={this.setPage} db={this.state.db} toc={this.state.toc} />
           </div>
         </div>
       </div>
+    </div>
+  </div>
       );
     }
   }

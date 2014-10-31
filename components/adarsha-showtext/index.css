@@ -3,3 +3,5 @@
 }
 pb:after{content: attr(n);
 	}
+division:after{content: attr(t);
+	}

@@ -1,9 +1,13 @@
-.showtext {font-family: ctrc-uchen;}
+.showtext {font-family: ctrc-uchen;
+	cursor:text;}
 .pagetext {line-height: 30px;
 	font-size: 120%;
+	cursor:default;
 }
-pb:after{content: attr(n);
-	}
+.cursor{cursor:default;}
+
+pb:after{content: attr(n);}
 division:after{content: attr(t);
 	}
-#address{font-size: 120%;}
+#address{font-size: 120%;
+	cursor:default;}

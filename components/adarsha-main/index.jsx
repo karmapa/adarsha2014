@@ -196,7 +196,7 @@ var main = React.createClass({
                   <label data-type="fulltext" className="btn btn-success" >
                   <input type="radio" name="field" autocomplete="off">ནང་དོན་འཚོལ་བ།</input>
                   </label>
-                </div>                
+                </div>         
                 <namelist res_toc={this.state.res_toc} tofind={this.state.tofind} gotofile={this.gotofile} />
                 <resultlist res={this.state.res} tofind={this.state.tofind} gotofile={this.gotofile} />
               </div>        

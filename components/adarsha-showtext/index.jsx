@@ -67,8 +67,8 @@ var controlsFile = React.createClass({
    // this.setState({address:res});
     return res;
   },
-  render: function() {    
-   return <div>
+  render: function() {   
+   return <div className="cursor">
             Bampo
             <a href="#" onClick={this.props.prev}><img width="25" src="./banner/prev.png"/></a>                                                   
             <a href="#" onClick={this.props.next}><img width="25" src="./banner/next.png"/></a>
@@ -118,7 +118,7 @@ var showtext = React.createClass({
 
     var text=this.renderpb(this.props.text);
     return (
-      <div>
+      <div className="cursor">
         <controls  next={this.props.nextpage} prev={this.props.prevpage} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} genToc={this.props.genToc} syncToc={this.props.syncToc}/>
         <controlsFile page={this.props.page} bodytext={this.props.bodytext}  next={this.props.nextfile} prev={this.props.prevfile} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} />
         <br/>

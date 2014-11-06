@@ -1,7 +1,9 @@
 .showtext {font-family: ctrc-uchen;}
-.text {line-height: 26px;
+.pagetext {line-height: 30px;
+	font-size: 120%;
 }
 pb:after{content: attr(n);
 	}
 division:after{content: attr(t);
 	}
+#address{font-size: 120%;}

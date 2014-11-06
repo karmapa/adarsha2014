@@ -19,7 +19,9 @@
     "adarsha/showtext": "*",
     "adarsha/renderItem": "*",
     "adarsha/renderinputs": "*",
-    "adarsha/page2catalog": "*"
+    "adarsha/page2catalog": "*",
+    "adarsha/namelist": "*",
+    "adarsha/searchbar": "*"
   },
   "development": {},
   "paths": [

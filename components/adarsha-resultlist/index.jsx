@@ -5,7 +5,6 @@
 //var othercomponent=Require("other"); 
 var resultlist=React.createClass({  //should search result
   show:function() {
-    console.log(this.props.children);
     var tofind=this.props.tofind;
     return this.props.res.excerpt.map(function(r,i){ // excerpt is an array 
       var t = new RegExp(tofind,"g"); 
@@ -18,7 +17,7 @@ var resultlist=React.createClass({  //should search result
   }, 
   gotopage:function(e) {
     var vpos=parseInt(e.target.parentNode.dataset['vpos']);
-    this.props.gotopage(vpos);
+    this.props.gotofile(vpos);
   },
   render:function() {
     if (this.props.res) {

@@ -18,7 +18,8 @@ var showtext=Require("showtext");
 var renderItem=Require("renderItem");
 var tibetan=Require("ksana-document").languages.tibetan; 
 var page2catalog=Require("page2catalog");
-var version="v0.0.30"
+var namelist=Require("namelist");
+var version="v0.1.03"
 var main = React.createClass({
   componentDidMount:function() {
     var that=this;
@@ -26,12 +27,13 @@ var main = React.createClass({
   }, 
   getInitialState: function() {
     document.title=version+"-adarsha";
-    return {dialog:null,res:{},bodytext:{file:0,page:0},db:null,toc_result:[],page:0};
+    return {dialog:null,res:{},res_toc:[],bodytext:{file:0,page:0},db:null,toc_result:[],page:0,field:"sutra"};
   },
   componentDidUpdate:function()  {
     var ch=document.documentElement.clientHeight;
-    this.refs["text-content"].getDOMNode().style.height=ch+"px";
-    this.refs["tab-content"].getDOMNode().style.height=(ch-40)+"px";
+    var banner=82;
+    this.refs["text-content"].getDOMNode().style.height=ch-banner+"px";
+    this.refs["tab-content"].getDOMNode().style.height=(ch-banner-40)+"px";
   },  
   encodeHashTag:function(file,p) { //file/page to hash tag
     var f=parseInt(file)+1;
@@ -48,56 +50,38 @@ var main = React.createClass({
   goHashTag:function() {
     this.decodeHashTag(window.location.hash || "#1.1");
   },
-  dosearch: function(){
-    var start=arguments[2];  
+  searchtypechange:function(e) {
+    var field=e.target.dataset.type;
     var w=this.refs.tofind.getDOMNode().value;
     var tofind=tibetan.romanize.fromWylie(w);
-    if (w!=tofind) {
-      this.setState({wylie:tofind});
+    this.dosearch(null,null,0,field,tofind);
+    this.setState({field:field});
+  },
+  dosearch: function(e,reactid,start,field,tofind){
+    field=field || this.state.field;
+    if(field == "fulltext"){
+      kse.search(this.state.db,tofind,{range:{start:start,maxhit:100}},function(data){ //call search engine          
+        this.setState({res:data, tofind:tofind, res_toc:[]});  
+      });
     }
-    kse.search(this.state.db,tofind,{range:{start:start,maxhit:100}},function(data){ //call search engine          
-      this.setState({res:data, tofind:tofind});  
-    });
+    if(field == "kacha"){
+      var res_kacha=api.search_api.searchKacha(tofind,this.state.toc);
+      this.setState({res_toc:res_kacha, tofind:tofind, res:[]});
+    }
+    if(field == "sutra"){
+      var res_sutra=api.search_api.searchSutra(tofind,this.state.toc);
+      this.setState({res_toc:res_sutra, tofind:tofind, res:[]});
+    }
+    
   },
-  dosearch_ex: function(e) {
-    var tofind=e.target.innerHTML;
-    kse.search(this.state.db,tofind,{range:{maxhit:100}},function(data){ //call search engine          
-      this.setState({res:data, tofind:tofind});  
-    });
-  },
-  dosearch_toc: function(){
-    var out=[];
-    var t=this.refs.tofind_toc.getDOMNode().value;
-    var tofind_toc=tibetan.romanize.fromWylie(t);
-    if (t!=tofind_toc) {
-      this.setState({wylie_toc:tofind_toc});
-    }    
-    var toc=this.state.toc;
-    out=toc.filter(function(te){
-      if(te["text"].indexOf(tofind_toc)>-1 && te["text"].match(tofind_toc)!=""){
-        return te;
-      }
-    },this);
-
-    this.setState({toc_result:out, tofind_toc:tofind_toc});
-
-  },
-  renderinputs:function(searcharea) {  // input interface for search
+  renderinputs:function(searcharea) {  // input interface for search // onInput={this.searchtypechange}
     if (this.state.db) {
-      if(searcharea == "text"){
-        return (    
-          <div><input className="form-control" onInput={this.dosearch} ref="tofind" defaultValue="byang chub"></input>
-          <span className="wylie">{this.state.wylie}</span>
-          </div>
-          )    
-      }
-      if(searcharea == "title"){
-        return (    
-          <div><input className="form-control" onInput={this.dosearch_toc} ref="tofind_toc" defaultValue="byang chub"></input>
-          <span className="wylie">{this.state.wylie_toc}</span>
-          </div>
-          ) 
-      }
+      return (    
+        <div>
+        <input className="form-control" ref="tofind" defaultValue="byang chub"></input>
+        <span className="wylie">{this.state.wylie}</span>
+        </div>
+        )          
     } else {
       return <span>loading database....</span>
     }
@@ -135,7 +119,11 @@ var main = React.createClass({
   showExcerpt:function(n) {
     var voff=this.state.toc[n].voff;
     this.dosearch(null,null,voff);
-  }, 
+  },
+  gotofile:function(vpos){
+    var res=kse.vpos2filepage(this.state.db,vpos);
+    this.showPage(res.file,res.page-1,false);
+  },
   showPage:function(f,p,hideResultlist) {    
     window.location.hash = this.encodeHashTag(f,p);
     var that=this;
@@ -147,21 +135,18 @@ var main = React.createClass({
   }, 
   showText:function(n) {
     var res=kse.vpos2filepage(this.state.db,this.state.toc[n].voff);
-    console.log(res.file,res.page,this.state.toc[n].voff);
     this.showPage(res.file,res.page,true);
   },
   nextfile:function() {
     var file=this.state.bodytext.file+1;
     var page=this.state.bodytext.page || 1;
     this.showPage(file,page,false);
-    console.log(file,"next");
   },
   prevfile:function() {
     var file=this.state.bodytext.file-1;
     var page=this.state.bodytext.page || 1;
     if (file<0) file=0;
     this.showPage(file,page,false);
-    console.log(file,"prev");
   },
   setPage:function(newpagename,file) {
     var fp=this.state.db.findPage(newpagename);
@@ -169,7 +154,6 @@ var main = React.createClass({
       this.showPage(fp[0].file,fp[0].page);
     }
   },
-
   render: function() {
     if (!this.state.quota) { // install required db
         return this.openFileinstaller(true);
@@ -178,51 +162,49 @@ var main = React.createClass({
       if (this.state.bodytext) {
         text=this.state.bodytext.text;
         pagename=this.state.bodytext.pagename;
-        console.log(this.state.bodytext);
     }
     return (
   <div className="row">
     <div className="col-md-12">
       <div className="header">
-        <img width="100px" src="http://karmapa.github.io/adarsha/Treasure.png"/>ADARSHA
+        &nbsp;&nbsp;<img height="80px" src="./banner/banner-01.png"/>
 
       </div>
 
       <div className="row">
-        <div className="col-md-4">
+        <div className="col-md-3">
+          <div className="borderright">
             <ul className="nav nav-tabs" role="tablist">
-              <li className="active"><a href="#Catalog" role="tab" data-toggle="tab">Catalog</a></li>
-              <li><a href="#SearchTitle" role="tab" data-toggle="tab">Title Search</a></li>
-              <li><a href="#SearchText" role="tab" data-toggle="tab">Text Search</a></li>
+              <li className="active"><a href="#Catalog" role="tab" data-toggle="tab">དཀར་ཆགས།</a></li>
+              <li><a href="#Search" role="tab" data-toggle="tab">འཚོལ་བ།</a></li>
             </ul>
 
             <div className="tab-content" ref="tab-content">
               <div className="tab-pane fade in active" id="Catalog">               
-                <stacktoc showText={this.showText} showExcerpt={this.showExcerpt} hits={this.state.res.rawresult} data={this.state.toc} goVoff={this.state.goVoff} />// 顯示目錄
+                <stacktoc showText={this.showText} showExcerpt={this.showExcerpt} hits={this.state.res.rawresult} data={this.state.toc} goVoff={this.state.goVoff} />
               </div>
 
-              <div className="tab-pane fade" id="SearchTitle">
+              <div className="tab-pane fade" id="Search">
                 {this.renderinputs("title")}
-                
-                <renderItem data={this.state.toc_result} gotopage={this.gotopage} tofind_toc={this.state.tofind_toc} />
-              </div> 
-
-              <div className="tab-pane fade" id="SearchText">
-                {this.renderinputs("text")}
-                
-                     Search Example:   1.<a href='#' onClick={this.dosearch_ex} >བྱས</a>
-                2. <a href='#' onClick={this.dosearch_ex} >གནས</a>
-                3. <a href='#' onClick={this.dosearch_ex} >འགྱུར</a>
-                4. <a href='#' onClick={this.dosearch_ex} >བདག</a>
-                5. <a href='#' onClick={this.dosearch_ex} >དགེ</a>
-                <br/><br/><br/>
-                <resultlist res={this.state.res} tofind={this.state.tofind} gotopage={this.gotopage}/>
-                <span>{this.state.elapse}</span>
-              </div>         
-            </div>                     
+                <div className="btn-group" data-toggle="buttons" ref="searchtype" onClick={this.searchtypechange}>
+                  <label data-type="sutra" className="btn btn-success">
+                  <input type="radio" name="field" autocomplete="off">མདོ་ཡི་མཚན་འཚོལ་བ།</input>
+                  </label>
+                  <label data-type="kacha" className="btn btn-success">
+                  <input type="radio" name="field" autocomplete="off">དཀར་ཆགས་འཚོལ་བ།</input>
+                  </label>
+                  <label data-type="fulltext" className="btn btn-success" >
+                  <input type="radio" name="field" autocomplete="off">ནང་དོན་འཚོལ་བ།</input>
+                  </label>
+                </div>                
+                <namelist res_toc={this.state.res_toc} tofind={this.state.tofind} gotofile={this.gotofile} />
+                <resultlist res={this.state.res} tofind={this.state.tofind} gotofile={this.gotofile} />
+              </div>        
+            </div>      
+          </div>     
         </div>
-       
-        <div className="col-md-8 ">
+
+        <div className="col-md-9">
           <div className="text text-content" ref="text-content">
           <showtext page={this.state.page}  bodytext={this.state.bodytext} text={text} nextfile={this.nextfile} prevfile={this.prevfile} setpage={this.setPage} db={this.state.db} toc={this.state.toc} />
           </div>

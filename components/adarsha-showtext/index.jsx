@@ -70,29 +70,49 @@ var controlsFile = React.createClass({
   render: function() {    
    return <div>
             Bampo
-            <a href="#" onClick={this.props.prev}><img width="25" src="http://karmapa.github.io/adarsha/prev.png"/></a>                                                   
-            <a href="#" onClick={this.props.next}><img width="25" src="http://karmapa.github.io/adarsha/next.png"/></a>
-            <br/><span>{this.getAddress()}</span>
+            <a href="#" onClick={this.props.prev}><img width="25" src="./banner/prev.png"/></a>                                                   
+            <a href="#" onClick={this.props.next}><img width="25" src="./banner/next.png"/></a>
+            <br/><span id="address">{this.getAddress()}</span>
           </div>
   }  
 });
 
 var showtext = React.createClass({
   getInitialState: function() {
-    return {bar: "world"};
+    return {bar: "world", pageImg:""};
   },
   hitClick: function(n){
     if(this.props.showExcerpt) this.props.showExcerpt(n);
   },
-  renderpb: function(s){
-    if(typeof s == "undefined") return "";
-    s= s.replace(/<pb n="(.*?)">/g,function(m,m1){
-      var link='<a target="_new" href="../adarsha_img/#'+m1+'">'+'<img width=25 src="http://karmapa.github.io/imageicon.png"/>'+'</a>';
+  renderPageImg: function(e) {
+    var pb=e.target.dataset.pb;
+    if (pb) this.setState({clickedpb:pb});
+    var img=e.target.dataset.img;
+    if (img) this.setState({clickedpb:null});
+  },
+  getImgName: function(volpage) {
+    var p=volpage.split(".");
+    var v="000"+p[0];
+    var vol=v.substr(v.length-3,v.length);
+    var pa="000"+p[1].substr(0,p[1].length-1);
+    var page=pa.substr(pa.length-3,pa.length);
+    var side=p[1].substr(p[1].length-1);
 
-      return "<br></br>"+m+link;
+    return vol+"/"+vol+"-"+page+side;
+  },
+  renderpb: function(s){
+    var that=this;
+    if(typeof s == "undefined") return "";
+    s= s.replace(/<pb n="(.*?)"><\/pb>/g,function(m,m1){
+      var link='<br></br><a href="#" data-pb="'+m1+'">'+m1+'<img width="25" src="banner/imageicon.png"/></a>';
+      if(m1 == that.state.clickedpb){
+        var imgName=that.getImgName(m1);
+        link='<br></br>'+m1+'<img data-img="'+m1+'" width="100%" src="../adarsha_img/lijiang/'+imgName+'.jpg"/>';
+      }
+      return link;
     });
     
-  return s;
+    return s;
   },
   render: function() {
 
@@ -102,7 +122,7 @@ var showtext = React.createClass({
         <controls  next={this.props.nextpage} prev={this.props.prevpage} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} genToc={this.props.genToc} syncToc={this.props.syncToc}/>
         <controlsFile page={this.props.page} bodytext={this.props.bodytext}  next={this.props.nextfile} prev={this.props.prevfile} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} />
         <br/>
-        <div className="text" dangerouslySetInnerHTML={{__html: text}} />
+        <div onClick={this.renderPageImg} className="pagetext" dangerouslySetInnerHTML={{__html: text}} />
       </div>
     );
   }

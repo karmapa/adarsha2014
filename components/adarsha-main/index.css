@@ -6,6 +6,16 @@
 .search{
 	}
 
+.nav-tabs > li, .nav-pills > li {
+    float:none;
+    display:inline-block;
+}
+
+.nav-tabs {
+    text-align:center;
+}
+
+
 
 .btn:active,  
 .btn.active {
@@ -27,10 +37,12 @@
 .col-md-3{
 	line-height: 36px;
 	float: left;
+	padding-left: 0;
+	padding-right: 10px;
 	}
 
 .input-small{
-	width:340px;
+	width:315px;
 }
 
 .col-md-9{

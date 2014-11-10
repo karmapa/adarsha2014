@@ -15,7 +15,6 @@ var kse=Require('ksana-document').kse; // Ksana Search Engine (run at client sid
 var api=Require("api");
 var stacktoc=Require("stacktoc");  //載入目錄顯示元件
 var showtext=Require("showtext");
-var renderItem=Require("renderItem");
 var tibetan=Require("ksana-document").languages.tibetan; 
 var page2catalog=Require("page2catalog");
 var namelist=Require("namelist");
@@ -77,7 +76,7 @@ var main = React.createClass({
     if (this.state.db) {
       return (    
         <div>
-        <input className="form-control input-small" ref="tofind" onInput={this.searchtypechange} defaultValue="byang chub"></input>
+        <input className="form-control input-small col-lg-offset-1" ref="tofind" onInput={this.searchtypechange} defaultValue="byang chub"></input>
         <span className="wylie">{this.state.wylie}</span>
         </div>
         )          
@@ -112,7 +111,7 @@ var main = React.createClass({
     if (window.location.origin.indexOf("http://127.0.0.1")==0) {
       require_kdb[0].url=window.location.origin+window.location.pathname+"jiangkangyur.kdb";
     }
-    return <fileinstaller quota="512M" autoclose={autoclose} needed={require_kdb} 
+    return <Fileinstaller quota="512M" autoclose={autoclose} needed={require_kdb} 
                      onReady={this.onReady}/>
   },
   showExcerpt:function(n) {
@@ -169,7 +168,7 @@ var main = React.createClass({
   <div className="row">
     <div className="col-md-12">
       <div className="header">
-        &nbsp;&nbsp;<img height="80px" src="./banner/banner-01.png"/>
+        &nbsp;&nbsp;<img height="80px" src="./banner/banner-06.png"/>
 
       </div>
 
@@ -177,26 +176,26 @@ var main = React.createClass({
         <div className="col-md-3">
           <div className="borderright">
             <ul className="nav nav-tabs" role="tablist">
-              <li className="active"><a href="#Catalog" role="tab" data-toggle="tab">དཀར་ཆག །</a></li>
-              <li><a href="#Search" role="tab" data-toggle="tab">འཚོལ་བ།</a></li>
+              <li className="active"><a href="#Search" role="tab" data-toggle="tab"><img height="30px" src="./banner/search.png"/></a></li>
+              <li><a href="#Catalog" role="tab" data-toggle="tab"><img height="30px" src="./banner/catalog.png"/></a></li>
             </ul>
 
             <div className="tab-content" ref="tab-content">
-              <div className="tab-pane fade in active" id="Catalog">               
+              <div className="tab-pane fade" id="Catalog">               
                 <stacktoc showText={this.showText} showExcerpt={this.showExcerpt} hits={this.state.res.rawresult} data={this.state.toc} goVoff={this.state.goVoff} />
               </div>
 
-              <div className="tab-pane fade" id="Search">
+              <div className="tab-pane fade in active" id="Search">
                 {this.renderinputs("title")}
-                <div className="btn-group" data-toggle="buttons" ref="searchtype" onClick={this.searchtypechange}>
-                  <label data-type="sutra" className="btn btn-default btn-xs" Checked>
-                  <input type="radio" name="field" autocomplete="off">མདོ་ཡི་མཚན་འཚོལ་བ།</input>
+                <div className="btn-group col-sm-offset-1" data-toggle="buttons" ref="searchtype" onClick={this.searchtypechange}>
+                  <label data-type="sutra" className="btn btn-default btn-sm" Checked>
+                  <input type="radio" name="field" autocomplete="off"> མདོ་ཡི་མཚན་འཚོལ་བ། </input>
                   </label>
-                  <label data-type="kacha" className="btn btn-default btn-xs">
-                  <input type="radio" name="field" autocomplete="off">དཀར་ཆགས་འཚོལ་བ།</input>
+                  <label data-type="kacha" className="btn btn-default btn-sm">
+                  <input type="radio" name="field" autocomplete="off"> དཀར་ཆགས་འཚོལ་བ། </input>
                   </label>
-                  <label data-type="fulltext" className="btn btn-default btn-xs" >
-                  <input type="radio" name="field" autocomplete="off">ནང་དོན་འཚོལ་བ།</input>
+                  <label data-type="fulltext" className="btn btn-default btn-sm" >
+                  <input type="radio" name="field" autocomplete="off"> ནང་དོན་འཚོལ་བ། </input>
                   </label>
                 </div>         
                 <namelist res_toc={this.state.res_toc} tofind={this.state.tofind} gotofile={this.gotofile} />

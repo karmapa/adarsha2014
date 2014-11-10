@@ -12,14 +12,15 @@ var namelist = React.createClass({
     <span>{e.target.innerHTML}</span>
     this.props.gotofile(voff);
   },
-  renderItem: function(item) {
+  renderNameItem: function(item) {
     var tofind=this.props.tofind;
-    item.text=item.text.replace(tofind,function(t){
+    var context="";
+    context=item.text.replace(tofind,function(t){
       return '<hl>'+t+"</hl>";
     });
     return (
       <div>
-        <li><a herf='#' className="item" data-voff={item.voff} onClick={this.onItemClick} dangerouslySetInnerHTML={{__html:item.text}}></a></li>
+        <li><a herf='#' className="item" data-voff={item.voff} onClick={this.onItemClick} dangerouslySetInnerHTML={{__html:context}}></a></li>
       </div> 
       )
   },
@@ -27,7 +28,7 @@ var namelist = React.createClass({
 
     return (
       <div>
-        {this.props.res_toc.map(this.renderItem)}
+        {this.props.res_toc.map(this.renderNameItem)}
       </div>
     );
   }

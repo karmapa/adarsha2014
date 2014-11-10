@@ -3,3 +3,5 @@
 
 @font-face { font-family: 'tibetan1'; font-style: normal; font-weight: normal; src: url("../fonts/himalaya_2.ttf"); }
 .text , .tocitem {font-family: 'tibetan1';text-decoration: none;cursor:pointer;}
+.stacktoc , .results , .item , .nav-tabs {font-family: 'tibetan1';}
+

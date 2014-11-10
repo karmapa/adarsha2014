@@ -8,10 +8,11 @@ var resultlist=React.createClass({  //should search result
     var tofind=this.props.tofind;
     return this.props.res.excerpt.map(function(r,i){ // excerpt is an array 
       var t = new RegExp(tofind,"g"); 
-      r.text=r.text.replace(t,function(tofind){return "<hl>"+tofind+"</hl>"});
+      var context="";
+      context=r.text.replace(t,function(tofind){return "<hl>"+tofind+"</hl>"});
       return <div data-vpos={r.hits[0][0]}>
       <a onClick={this.gotopage} className="pagename">{r.pagename}</a>
-        <div className="resultitem" dangerouslySetInnerHTML={{__html:r.text}}></div>
+        <div className="resultitem" dangerouslySetInnerHTML={{__html:context}}></div>
       </div>
     },this);
   }, 
@@ -25,7 +26,7 @@ var resultlist=React.createClass({  //should search result
           return <div className="results">{this.show()}</div>
           debugger;
       } else {
-        return <div>Not found</div>
+        return <div></div>
       }
     }
     else {

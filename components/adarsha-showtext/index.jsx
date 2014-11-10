@@ -1,22 +1,6 @@
 /** @jsx React.DOM */
 
 //var othercomponent=Require("other"); 
-var controls = React.createClass({
-  getInitialState: function() {
-    return {};
-  },
-
-  gotoToc: function(){
-    this.props.syncToc();       
-  },
-  render: function() { 
-   
-   return <div>
-
-          </div>
-  }  
-});
-
 var controlsFile = React.createClass({
   getInitialState: function() {
     return {address:0};
@@ -79,16 +63,34 @@ var controlsFile = React.createClass({
 
 var showtext = React.createClass({
   getInitialState: function() {
-    return {bar: "world", pageImg:""};
+    return {bar: "world", pageImg:"", scroll:true};
+  },
+  componentDidUpdate:function()  {    
+    if(this.props.scrollto && this.props.scrollto.match(/[ab]/) && this.state.scroll){
+      var p=this.props.scrollto.match(/\d+.(\d+)[ab]/);
+      $(".text-content").scrollTop( 0 );
+      if(p[1]!=1){       
+        var pb=$("a[data-pb='"+this.props.scrollto+"']");
+        if(pb.length) $(".text-content").scrollTop( pb.position().top-20 );
+      }          
+    }  
+
   },
   hitClick: function(n){
     if(this.props.showExcerpt) this.props.showExcerpt(n);
   },
   renderPageImg: function(e) {
     var pb=e.target.dataset.pb;
-    if (pb) this.setState({clickedpb:pb});
+    if (pb) {
+      this.setState({clickedpb:pb});  
+      this.setState({scroll:false});
+    }
     var img=e.target.dataset.img;
-    if (img) this.setState({clickedpb:null});
+    if (img) {
+      this.setState({clickedpb:null});  
+      this.setState({scroll:true}); 
+    }
+    
   },
   getImgName: function(volpage) {
     var p=volpage.split(".");
@@ -107,7 +109,7 @@ var showtext = React.createClass({
       var link='<br></br><a href="#" data-pb="'+m1+'">'+m1+'<img width="25" src="banner/imageicon.png"/></a>';
       if(m1 == that.state.clickedpb){
         var imgName=that.getImgName(m1);
-        link='<br></br>'+m1+'<img data-img="'+m1+'" width="100%" src="../adarsha_img/lijiang/'+imgName+'.jpg"/>';
+        link='<br></br>'+m1+'<img data-img="'+m1+'" width="100%" src="../adarsha_img/lijiang/'+imgName+'.jpg"/><br></br>';
       }
       return link;
     });
@@ -115,14 +117,12 @@ var showtext = React.createClass({
     return s;
   },
   render: function() {
-
-    var text=this.renderpb(this.props.text);
+    var content=this.renderpb(this.props.text);
     return (
-      <div className="cursor">
-        <controls  next={this.props.nextpage} prev={this.props.prevpage} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} genToc={this.props.genToc} syncToc={this.props.syncToc}/>
+      <div className="cursor">        
         <controlsFile page={this.props.page} bodytext={this.props.bodytext}  next={this.props.nextfile} prev={this.props.prevfile} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} />
         <br/>
-        <div onClick={this.renderPageImg} className="pagetext" dangerouslySetInnerHTML={{__html: text}} />
+        <div onClick={this.renderPageImg} className="pagetext" dangerouslySetInnerHTML={{__html: content}} />
       </div>
     );
   }

@@ -19,7 +19,7 @@ var renderItem=Require("renderItem");
 var tibetan=Require("ksana-document").languages.tibetan; 
 var page2catalog=Require("page2catalog");
 var namelist=Require("namelist");
-var version="v0.1.03"
+var version="v0.1.10"
 var main = React.createClass({
   componentDidMount:function() {
     var that=this;
@@ -27,7 +27,7 @@ var main = React.createClass({
   }, 
   getInitialState: function() {
     document.title=version+"-adarsha";
-    return {dialog:null,res:{},res_toc:[],bodytext:{file:0,page:0},db:null,toc_result:[],page:0,field:"sutra"};
+    return {dialog:null,res:{},res_toc:[],bodytext:{file:0,page:0},db:null,toc_result:[],page:0,field:"sutra",scrollto:0};
   },
   componentDidUpdate:function()  {
     var ch=document.documentElement.clientHeight;
@@ -37,14 +37,13 @@ var main = React.createClass({
   },  
   encodeHashTag:function(file,p) { //file/page to hash tag
     var f=parseInt(file)+1;
-    var pagename=this.state.db.getFilePageNames(f)[p];
     return "#"+f+"."+p;
   },
   decodeHashTag:function(s) {
     var fp=s.match(/#(\d+)\.(.*)/);
     var p=parseInt(fp[2]);
     var file=parseInt(fp[1])-1;
-    var pagename=this.state.db.getFilePageNames(file)[p];   
+    var pagename=this.state.db.getFilePageNames(file)[p]; 
     this.setPage(pagename,file);
   },
   goHashTag:function() {
@@ -55,7 +54,7 @@ var main = React.createClass({
     var w=this.refs.tofind.getDOMNode().value;
     var tofind=tibetan.romanize.fromWylie(w);
     this.dosearch(null,null,0,field,tofind);
-    this.setState({field:field});
+    if(field) this.setState({field:field});
   },
   dosearch: function(e,reactid,start,field,tofind){
     field=field || this.state.field;
@@ -78,7 +77,7 @@ var main = React.createClass({
     if (this.state.db) {
       return (    
         <div>
-        <input className="form-control" ref="tofind" defaultValue="byang chub"></input>
+        <input className="form-control input-small" ref="tofind" onInput={this.searchtypechange} defaultValue="byang chub"></input>
         <span className="wylie">{this.state.wylie}</span>
         </div>
         )          
@@ -122,16 +121,18 @@ var main = React.createClass({
   },
   gotofile:function(vpos){
     var res=kse.vpos2filepage(this.state.db,vpos);
-    this.showPage(res.file,res.page-1,false);
+    this.showPage(res.file,res.page,false);
   },
   showPage:function(f,p,hideResultlist) {    
     window.location.hash = this.encodeHashTag(f,p);
     var that=this;
+    var pagename=this.state.db.getFilePageNames(f)[p];
+    this.setState({scrollto:pagename});
+
     kse.highlightFile(this.state.db,f,{q:this.state.tofind},function(data){
       that.setState({bodytext:data,page:p});
       if (hideResultlist) that.setState({res:[]});     
     });
-
   }, 
   showText:function(n) {
     var res=kse.vpos2filepage(this.state.db,this.state.toc[n].voff);
@@ -153,6 +154,7 @@ var main = React.createClass({
     if (fp.length){
       this.showPage(fp[0].file,fp[0].page);
     }
+    console.log(newpagename);
   },
   render: function() {
     if (!this.state.quota) { // install required db
@@ -175,7 +177,7 @@ var main = React.createClass({
         <div className="col-md-3">
           <div className="borderright">
             <ul className="nav nav-tabs" role="tablist">
-              <li className="active"><a href="#Catalog" role="tab" data-toggle="tab">དཀར་ཆགས།</a></li>
+              <li className="active"><a href="#Catalog" role="tab" data-toggle="tab">དཀར་ཆག །</a></li>
               <li><a href="#Search" role="tab" data-toggle="tab">འཚོལ་བ།</a></li>
             </ul>
 
@@ -187,13 +189,13 @@ var main = React.createClass({
               <div className="tab-pane fade" id="Search">
                 {this.renderinputs("title")}
                 <div className="btn-group" data-toggle="buttons" ref="searchtype" onClick={this.searchtypechange}>
-                  <label data-type="sutra" className="btn btn-success">
+                  <label data-type="sutra" className="btn btn-default btn-xs" Checked>
                   <input type="radio" name="field" autocomplete="off">མདོ་ཡི་མཚན་འཚོལ་བ།</input>
                   </label>
-                  <label data-type="kacha" className="btn btn-success">
+                  <label data-type="kacha" className="btn btn-default btn-xs">
                   <input type="radio" name="field" autocomplete="off">དཀར་ཆགས་འཚོལ་བ།</input>
                   </label>
-                  <label data-type="fulltext" className="btn btn-success" >
+                  <label data-type="fulltext" className="btn btn-default btn-xs" >
                   <input type="radio" name="field" autocomplete="off">ནང་དོན་འཚོལ་བ།</input>
                   </label>
                 </div>         
@@ -206,7 +208,7 @@ var main = React.createClass({
 
         <div className="col-md-9">
           <div className="text text-content" ref="text-content">
-          <showtext page={this.state.page}  bodytext={this.state.bodytext} text={text} nextfile={this.nextfile} prevfile={this.prevfile} setpage={this.setPage} db={this.state.db} toc={this.state.toc} />
+          <showtext page={this.state.page}  bodytext={this.state.bodytext} text={text} nextfile={this.nextfile} prevfile={this.prevfile} setpage={this.setPage} db={this.state.db} toc={this.state.toc} scrollto={this.state.scrollto} />
           </div>
         </div>
       </div>

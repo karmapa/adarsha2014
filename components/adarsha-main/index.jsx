@@ -8,16 +8,16 @@ var require_kdb=[{
 }];
 //var othercomponent=Require("other"); 
 var bootstrap=Require("bootstrap");  
-var resultlist=Require("resultlist");
-var fileinstaller=Require("fileinstaller");
+var Resultlist=Require("resultlist");
+var Fileinstaller=Require("fileinstaller");
 var kde=Require('ksana-document').kde;  // Ksana Database Engine
 var kse=Require('ksana-document').kse; // Ksana Search Engine (run at client side)
 var api=Require("api");
-var stacktoc=Require("stacktoc");  //載入目錄顯示元件
-var showtext=Require("showtext");
+var Stacktoc=Require("stacktoc");  //載入目錄顯示元件
+var Showtext=Require("showtext");
 var tibetan=Require("ksana-document").languages.tibetan; 
 var page2catalog=Require("page2catalog");
-var namelist=Require("namelist");
+var Namelist=Require("namelist");
 var version="v0.1.10"
 var main = React.createClass({
   componentDidMount:function() {
@@ -30,7 +30,7 @@ var main = React.createClass({
   },
   componentDidUpdate:function()  {
     var ch=document.documentElement.clientHeight;
-    var banner=82;
+    var banner=52;
     this.refs["text-content"].getDOMNode().style.height=ch-banner+"px";
     this.refs["tab-content"].getDOMNode().style.height=(ch-banner-40)+"px";
   },  
@@ -168,7 +168,7 @@ var main = React.createClass({
   <div className="row">
     <div className="col-md-12">
       <div className="header">
-        &nbsp;&nbsp;<img height="80px" src="./banner/banner-06.png"/>
+        <span>  </span><img height="80px" src="./banner/banner-06.png"/>
 
       </div>
 
@@ -182,24 +182,24 @@ var main = React.createClass({
 
             <div className="tab-content" ref="tab-content">
               <div className="tab-pane fade" id="Catalog">               
-                <stacktoc showText={this.showText} showExcerpt={this.showExcerpt} hits={this.state.res.rawresult} data={this.state.toc} goVoff={this.state.goVoff} />
+                <Stacktoc showText={this.showText} showExcerpt={this.showExcerpt} hits={this.state.res.rawresult} data={this.state.toc} goVoff={this.state.goVoff} />
               </div>
 
               <div className="tab-pane fade in active" id="Search">
                 {this.renderinputs("title")}
                 <div className="btn-group col-sm-offset-1" data-toggle="buttons" ref="searchtype" onClick={this.searchtypechange}>
-                  <label data-type="sutra" className="btn btn-default btn-sm" Checked>
-                  <input type="radio" name="field" autocomplete="off"> མདོ་ཡི་མཚན་འཚོལ་བ། </input>
+                  <label data-type="sutra" className="btn btn-default btn-xs" Checked>
+                  <input type="radio" name="field" autocomplete="off"> མདོ་མིང་འཚོལ་བ། </input>
                   </label>
-                  <label data-type="kacha" className="btn btn-default btn-sm">
-                  <input type="radio" name="field" autocomplete="off"> དཀར་ཆགས་འཚོལ་བ། </input>
+                  <label data-type="kacha" className="btn btn-default btn-xs">
+                  <input type="radio" name="field" autocomplete="off"> དཀར་ཆག་འཚོལ་བ། </input>
                   </label>
-                  <label data-type="fulltext" className="btn btn-default btn-sm" >
+                  <label data-type="fulltext" className="btn btn-default btn-xs" >
                   <input type="radio" name="field" autocomplete="off"> ནང་དོན་འཚོལ་བ། </input>
                   </label>
                 </div>         
-                <namelist res_toc={this.state.res_toc} tofind={this.state.tofind} gotofile={this.gotofile} />
-                <resultlist res={this.state.res} tofind={this.state.tofind} gotofile={this.gotofile} />
+                <Namelist res_toc={this.state.res_toc} tofind={this.state.tofind} gotofile={this.gotofile} />
+                <Resultlist res={this.state.res} tofind={this.state.tofind} gotofile={this.gotofile} />
               </div>        
             </div>      
           </div>     
@@ -207,7 +207,7 @@ var main = React.createClass({
 
         <div className="col-md-9">
           <div className="text text-content" ref="text-content">
-          <showtext page={this.state.page}  bodytext={this.state.bodytext} text={text} nextfile={this.nextfile} prevfile={this.prevfile} setpage={this.setPage} db={this.state.db} toc={this.state.toc} scrollto={this.state.scrollto} />
+          <Showtext page={this.state.page}  bodytext={this.state.bodytext} text={text} nextfile={this.nextfile} prevfile={this.prevfile} setpage={this.setPage} db={this.state.db} toc={this.state.toc} scrollto={this.state.scrollto} />
           </div>
         </div>
       </div>

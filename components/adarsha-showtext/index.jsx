@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 
 //var othercomponent=Require("other"); 
-var controlsFile = React.createClass({
+var ControlsFile = React.createClass({
   getInitialState: function() {
     return {address:0};
   },
@@ -120,7 +120,7 @@ var showtext = React.createClass({
     var content=this.renderpb(this.props.text);
     return (
       <div className="cursor">        
-        <controlsFile page={this.props.page} bodytext={this.props.bodytext}  next={this.props.nextfile} prev={this.props.prevfile} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} />
+        <ControlsFile page={this.props.page} bodytext={this.props.bodytext}  next={this.props.nextfile} prev={this.props.prevfile} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} />
         <br/>
         <div onClick={this.renderPageImg} className="pagetext" dangerouslySetInnerHTML={{__html: content}} />
       </div>

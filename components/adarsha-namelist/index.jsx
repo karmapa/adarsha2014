@@ -8,7 +8,8 @@ var namelist = React.createClass({
     return {};
   },
   onItemClick:function(e) {
-    var voff=parseInt(e.target.dataset.voff);
+    if (e.target.nodeName == "HL") var voff=parseInt(e.target.parentElement.dataset.voff);
+    else voff=parseInt(e.target.dataset.voff);
     <span>{e.target.innerHTML}</span>
     this.props.gotofile(voff);
   },

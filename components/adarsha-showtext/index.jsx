@@ -21,7 +21,7 @@ var ControlsFile = React.createClass({
     if(!this.props.toc) return 0;
     for (var i=0;i<this.props.toc.length;i++) {
       var t=this.props.toc[i];
-      if (t.voff>voff) return i-1;
+      if (t.voff>=voff) return i;
     }
     return 0; //return root node
   },
@@ -65,7 +65,7 @@ var showtext = React.createClass({
   getInitialState: function() {
     return {bar: "world", pageImg:"", scroll:true};
   },
-  componentDidUpdate:function()  {    
+  componentDidUpdate:function()  {
     if(this.props.scrollto && this.props.scrollto.match(/[ab]/) && this.state.scroll){
       var p=this.props.scrollto.match(/\d+.(\d+)[ab]/);
       $(".text-content").scrollTop( 0 );

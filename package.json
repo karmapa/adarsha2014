@@ -7,8 +7,8 @@
   "single-instance":true,
   "window": {
     "toolbar": false,
-    "width": 1280,
-    "height": 700
+    "width": 1300,
+    "height": 750
   },
  "repositories": [
   {

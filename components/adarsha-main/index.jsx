@@ -30,7 +30,7 @@ var main = React.createClass({
   },
   componentDidUpdate:function()  {
     var ch=document.documentElement.clientHeight;
-    var banner=52;
+    var banner=100;
     this.refs["text-content"].getDOMNode().style.height=ch-banner+"px";
     this.refs["tab-content"].getDOMNode().style.height=(ch-banner-40)+"px";
   },  
@@ -76,7 +76,7 @@ var main = React.createClass({
     if (this.state.db) {
       return (    
         <div>
-        <input className="form-control input-small col-lg-offset-1" ref="tofind" onInput={this.searchtypechange} defaultValue="byang chub"></input>
+        <input className="form-control input-small" ref="tofind" onInput={this.searchtypechange} defaultValue="byang chub"></input>
         <span className="wylie">{this.state.wylie}</span>
         </div>
         )          
@@ -135,7 +135,7 @@ var main = React.createClass({
   }, 
   showText:function(n) {
     var res=kse.vpos2filepage(this.state.db,this.state.toc[n].voff);
-    this.showPage(res.file,res.page,true);
+    if(res.file != -1) this.showPage(res.file,res.page,true);    
   },
   nextfile:function() {
     var file=this.state.bodytext.file+1;
@@ -187,7 +187,7 @@ var main = React.createClass({
 
               <div className="tab-pane fade in active" id="Search">
                 {this.renderinputs("title")}
-                <div className="btn-group col-sm-offset-1" data-toggle="buttons" ref="searchtype" onClick={this.searchtypechange}>
+                <div className="btn-group" data-toggle="buttons" ref="searchtype" onClick={this.searchtypechange}>
                   <label data-type="sutra" className="btn btn-default btn-xs" Checked>
                   <input type="radio" name="field" autocomplete="off"> མདོ་མིང་འཚོལ་བ། </input>
                   </label>

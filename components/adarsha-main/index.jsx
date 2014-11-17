@@ -187,6 +187,7 @@ var main = React.createClass({
 
               <div className="tab-pane fade in active" id="Search">
                 {this.renderinputs("title")}
+                <div className="center">
                 <div className="btn-group" data-toggle="buttons" ref="searchtype" onClick={this.searchtypechange}>
                   <label data-type="sutra" className="btn btn-default btn-xs" Checked>
                   <input type="radio" name="field" autocomplete="off"> མདོ་མིང་འཚོལ་བ། </input>
@@ -197,7 +198,8 @@ var main = React.createClass({
                   <label data-type="fulltext" className="btn btn-default btn-xs" >
                   <input type="radio" name="field" autocomplete="off"> ནང་དོན་འཚོལ་བ། </input>
                   </label>
-                </div>         
+                </div> 
+                </div>       
                 <Namelist res_toc={this.state.res_toc} tofind={this.state.tofind} gotofile={this.gotofile} />
                 <Resultlist res={this.state.res} tofind={this.state.tofind} gotofile={this.gotofile} />
               </div>        

@@ -122,7 +122,7 @@ var main = React.createClass({
     var res=kse.vpos2filepage(this.state.db,vpos);
     this.showPage(res.file,res.page,false);
   },
-  showPage:function(f,p,hideResultlist) {    
+  showPage:function(f,p,hideResultlist) {  
     window.location.hash = this.encodeHashTag(f,p);
     var that=this;
     var pagename=this.state.db.getFilePageNames(f)[p];

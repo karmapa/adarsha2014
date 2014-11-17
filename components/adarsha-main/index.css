@@ -43,6 +43,7 @@ input {
 .col-md-3{
 	width: 25%;
 	line-height: 36px;
+	font-size: 12px;
 	float: left;
 	padding-left: 0;
 	padding-right: 10px;

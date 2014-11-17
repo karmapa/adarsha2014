@@ -81,7 +81,7 @@ var showtext = React.createClass({
   },
   renderPageImg: function(e) {
     var pb=e.target.dataset.pb;
-    if (pb) {
+    if (pb || e.target.nodeName == "IMG") {
       this.setState({clickedpb:pb});  
       this.setState({scroll:false});
     }
@@ -106,7 +106,7 @@ var showtext = React.createClass({
     var that=this;
     if(typeof s == "undefined") return "";
     s= s.replace(/<pb n="(.*?)"><\/pb>/g,function(m,m1){
-      var link='<br></br><a href="#" data-pb="'+m1+'">'+m1+'<img width="25" src="banner/imageicon.png"/></a>';
+      var link='<br></br><a href="#" data-pb="'+m1+'">'+m1+'<img width="25" data-pb="'+m1+'" src="banner/imageicon.png"/></a>';
       if(m1 == that.state.clickedpb){
         var imgName=that.getImgName(m1);
         link='<br></br>'+m1+'<img data-img="'+m1+'" width="100%" src="../adarsha_img/lijiang/'+imgName+'.jpg"/><br></br>';

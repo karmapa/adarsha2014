@@ -6,7 +6,7 @@ var require_kdb=[{
   filename:"jiangkangyur.kdb"  , 
   url:"http://ya.ksana.tw/kdb/jiangkangyur.kdb" , desc:"jiangkangyur"
 }];
-//var othercomponent=Require("other"); 
+//var othercomponent=Require("other");
 var bootstrap=Require("bootstrap");  
 var Resultlist=Require("resultlist");
 var Fileinstaller=Require("fileinstaller");
@@ -18,7 +18,7 @@ var Showtext=Require("showtext");
 var tibetan=Require("ksana-document").languages.tibetan; 
 var page2catalog=Require("page2catalog");
 var Namelist=Require("namelist");
-var version="v0.1.14"
+var version="v0.1.18"
 var main = React.createClass({
   componentDidMount:function() {
     var that=this;
@@ -167,8 +167,8 @@ var main = React.createClass({
     return (
   <div className="row">
     <div className="col-md-12">
-      <div className="header">
-        <span>  </span><img height="80px" src="./banner/banner-06.png"/>
+      <div className="header" background="./banner/banner_back.png">
+        <img width="100%" src="./banner/banner-06.png"/>
 
       </div>
 

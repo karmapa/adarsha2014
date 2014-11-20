@@ -33,22 +33,15 @@ var countCorresLine=function(volpage,range,corres_range,start,corres_start){//vo
 }
 
 var countRange=function(Range){//range=034@020a1-103b7
-	// if(startRange == endRange){  //起始範圍=結束範圍：代表只有對照到一函，沒有跨函
-	// 	var p=startRange.split("-");
-	// 	var start=p[0];
-	// 	var vStart=volpb2vl(start);
-	// 	var end=p[0].substr(0,3)+"."+p[1];
-	// 	var vEnd=volpb2vl(end);
-	// 	//var vRange=vEnd-vStart;
-	// 	var vRange=[vStart,vEnd-vStart];
-	// }
-	// else if(startRange != endRange){}
-		var m=Range.split("-");
-		var start=m[0];
-		var vStart=volpb2vl(start);
-		var end=m[1]
-		var vEnd=volpb2vl(end);
-		var vRange=[vStart,vEnd-vStart];
+	var m=Range.split("-");
+	var start=m[0];
+	var vStart=volpb2vl(start);
+	if (m[1].match("@")) var end=m[1];
+	else {
+		var end=start.substr(0,start.indexOf("@")+1)+m[1];
+	}
+	var vEnd=volpb2vl(end);
+	var vRange=[vStart,vEnd-vStart];
 	
 	return vRange;
 }

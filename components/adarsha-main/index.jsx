@@ -162,7 +162,11 @@ var main = React.createClass({
   hideinputrender: function(e) {
     if(e.target.checked){
       this.setState({wylie:[],hide:true});
-    } else this.setState({hide:false});
+    } else {
+      var w=this.refs.tofind.getDOMNode().value;
+      var tofind=tibetan.romanize.fromWylie(w);
+      this.setState({wylie:tofind,hide:false});
+    }
   },
   render: function() {
     if (!this.state.quota) { // install required db
@@ -177,7 +181,7 @@ var main = React.createClass({
   <div className="row">
     <div className="col-md-12">
       <div className="header">
-        <img width="100%" src="./banner/banner-gray.png"/>
+        <img width="100%" src="./banner/banner-06.png"/>
 
       </div>
 

@@ -21,7 +21,8 @@
     "adarsha/renderinputs": "*",
     "adarsha/page2catalog": "*",
     "adarsha/namelist": "*",
-    "adarsha/searchbar": "*"
+    "adarsha/searchbar": "*",
+    "adarsha/dataset": "*"
   },
   "development": {},
   "paths": [

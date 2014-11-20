@@ -1,6 +1,6 @@
 {
-  "name": "api",
-  "repo": "adarsha/api",
+  "name": "dataset",
+  "repo": "adarsha/dataset",
   "description": "non visual module",
   "version": "0.0.1",
   "keywords": [],
@@ -8,6 +8,6 @@
   "development": {},
   "license": "MIT",
   "main": "index.js",
-  "scripts": ["index.js","search_api.js","corres_api.js"],
+  "scripts": ["index.js","jPedurma.js","dPedurma.js"],
   "styles": []
 }

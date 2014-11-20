@@ -1,6 +1,9 @@
 /** @jsx React.DOM */
 
 //var othercomponent=Require("other"); 
+var api=Require("api");
+var dataset=Require("dataset");
+var mappings={"J":dataset.jPedurma,"D":dataset.dPedurma};
 var ControlsFile = React.createClass({
   getInitialState: function() {
     return {address:0};
@@ -102,6 +105,12 @@ var showtext = React.createClass({
 
     return vol+"/"+vol+"-"+page+side;
   },
+
+  getCorresPage: function(fromPage) {
+    var corresPage=api.corres_api.dosearch(fromPage,mappings["J"],mappings["D"]);
+    return corresPage;
+  },
+
   renderpb: function(s){
     var that=this;
     if(typeof s == "undefined") return "";
@@ -109,7 +118,8 @@ var showtext = React.createClass({
       var link='<br></br><a href="#" data-pb="'+m1+'">'+m1+'<img width="25" data-pb="'+m1+'" src="banner/imageicon.png"/></a>';
       if(m1 == that.state.clickedpb){
         var imgName=that.getImgName(m1);
-        link='<br></br>'+m1+'<img data-img="'+m1+'" width="100%" src="../adarsha_img/lijiang/'+imgName+'.jpg"/><br></br>';
+        var corresPage=that.getCorresPage(m1);
+        link='<br></br>'+m1+'&nbsp;Derge:'+corresPage+'<img data-img="'+m1+'" width="100%" src="../adarsha_img/lijiang/'+imgName+'.jpg"/><br></br>';
       }
       return link;
     });

@@ -167,8 +167,8 @@ var main = React.createClass({
     return (
   <div className="row">
     <div className="col-md-12">
-      <div className="header" background="./banner/banner_back.png">
-        <img width="100%" src="./banner/banner-06.png"/>
+      <div className="header">
+        <img width="100%" src="./banner/banner-gray.png"/>
 
       </div>
 

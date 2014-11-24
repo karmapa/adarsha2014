@@ -53,8 +53,8 @@ var main = React.createClass({
     var w=this.refs.tofind.getDOMNode().value;
     var tofind=tibetan.romanize.fromWylie(w);
     if (w!=tofind && !this.state.hide) {
-      this.setState({wylie:tofind});
-    } else this.setState({wylie:null});
+      this.setState({tofind_wylie:tofind});
+    } else this.setState({tofind_wylie:null});
     this.dosearch(null,null,0,field,tofind);
     if(field) this.setState({field:field});
   },
@@ -161,11 +161,11 @@ var main = React.createClass({
   },
   hideinputrender: function(e) {
     if(e.target.checked){
-      this.setState({wylie:[],hide:true});
+      this.setState({tofind_wylie:[],hide:true});
     } else {
       var w=this.refs.tofind.getDOMNode().value;
       var tofind=tibetan.romanize.fromWylie(w);
-      this.setState({wylie:tofind,hide:false});
+      this.setState({tofind_wylie:tofind,hide:false});
     }
   },
   setwylie: function() {
@@ -226,7 +226,7 @@ var main = React.createClass({
                     </label>
                   </div>
                   
-                  &nbsp;&nbsp;&nbsp;<span className="wylie">{this.state.wylie}</span>
+                  &nbsp;&nbsp;&nbsp;<span className="wylie">{this.state.tofind_wylie}</span>
                                     
                 </div>       
                 <Namelist wylie={this.state.wylie} res_toc={this.state.res_toc} tofind={this.state.tofind} gotofile={this.gotofile} />

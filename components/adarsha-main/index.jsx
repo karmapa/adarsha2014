@@ -26,7 +26,7 @@ var main = React.createClass({
   }, 
   getInitialState: function() {
     document.title=version+"-adarsha";
-    return {dialog:null,res:{},res_toc:[],bodytext:{file:0,page:0},db:null,toc_result:[],page:0,field:"sutra",scrollto:0,hide:false};
+    return {dialog:null,res:{},res_toc:[],bodytext:{file:0,page:0},db:null,toc_result:[],page:0,field:"sutra",scrollto:0,hide:false, wylie:false};
   },
   componentDidUpdate:function()  {
     var ch=document.documentElement.clientHeight;
@@ -168,6 +168,14 @@ var main = React.createClass({
       this.setState({wylie:tofind,hide:false});
     }
   },
+  setwylie: function() {
+    if(this.state.wylie == false) this.setState({wylie:true});
+    if(this.state.wylie == true) this.setState({wylie:false});
+  },
+  textConverter:function(t) {
+    if(this.state.wylie == false) return tibetan.romanize.fromWylie(t,null,false);
+    if(this.state.wylie == true) return tibetan.romanize.toWylie(t,null,false);  
+  },
   render: function() {
     if (!this.state.quota) { // install required db
         return this.openFileinstaller(true);
@@ -195,7 +203,7 @@ var main = React.createClass({
 
             <div className="tab-content" ref="tab-content">
               <div className="tab-pane fade" id="Catalog">               
-                <Stacktoc showText={this.showText} showExcerpt={this.showExcerpt} hits={this.state.res.rawresult} data={this.state.toc} goVoff={this.state.goVoff} />
+                <Stacktoc textConverter={this.textConverter} showText={this.showText} showExcerpt={this.showExcerpt} hits={this.state.res.rawresult} data={this.state.toc} goVoff={this.state.goVoff} />
               </div>
 
               <div className="tab-pane fade in active" id="Search">
@@ -203,7 +211,7 @@ var main = React.createClass({
                 <div className="center">
                   <div className="btn-group" data-toggle="buttons" ref="searchtype" onClick={this.searchtypechange}>
                     <label data-type="sutra" className="btn btn-default btn-xs" Checked>
-                    <input type="radio" name="field" autocomplete="off"> མདོ་མིང་འཚོལ་བ། </input>
+                    <input type="radio" name="field" autocomplete="off"><img width="25" src="./banner/prev.png"></img></input>
                     </label>
                     <label data-type="kacha" className="btn btn-default btn-xs">
                     <input type="radio" name="field" autocomplete="off"> དཀར་ཆག་འཚོལ་བ། </input>
@@ -221,16 +229,17 @@ var main = React.createClass({
                   &nbsp;&nbsp;&nbsp;<span className="wylie">{this.state.wylie}</span>
                                     
                 </div>       
-                <Namelist res_toc={this.state.res_toc} tofind={this.state.tofind} gotofile={this.gotofile} />
-                <Resultlist res={this.state.res} tofind={this.state.tofind} gotofile={this.gotofile} />
+                <Namelist wylie={this.state.wylie} res_toc={this.state.res_toc} tofind={this.state.tofind} gotofile={this.gotofile} />
+                <Resultlist wylie={this.state.wylie} res={this.state.res} tofind={this.state.tofind} gotofile={this.gotofile} />
               </div>        
             </div>      
           </div>     
         </div>
 
         <div className="col-md-9">
+          
           <div className="text text-content" ref="text-content">
-          <Showtext page={this.state.page}  bodytext={this.state.bodytext} text={text} nextfile={this.nextfile} prevfile={this.prevfile} setpage={this.setPage} db={this.state.db} toc={this.state.toc} scrollto={this.state.scrollto} />
+          <Showtext setwylie={this.setwylie} wylie={this.state.wylie} page={this.state.page}  bodytext={this.state.bodytext} text={text} nextfile={this.nextfile} prevfile={this.prevfile} setpage={this.setPage} db={this.state.db} toc={this.state.toc} scrollto={this.state.scrollto} />
           </div>
         </div>
       </div>

@@ -3,6 +3,7 @@
 //var othercomponent=Require("other"); 
 var api=Require("api");
 var dataset=Require("dataset");
+var tibetan=Require("ksana-document").languages.tibetan; 
 var mappings={"J":dataset.jPedurma,"D":dataset.dPedurma};
 var ControlsFile = React.createClass({
   getInitialState: function() {
@@ -52,14 +53,19 @@ var ControlsFile = React.createClass({
     var page=this.props.page;
     var res=this.filepage2vpos(file,page);
    // this.setState({address:res});
-    return res;
+   if(this.props.wylie == false) return res;
+   if(this.props.wylie == true) return tibetan.romanize.toWylie(res,null,false);
+    
   },
+
   render: function() {   
    return <div className="cursor">
             Bampo
-            <a href="#" onClick={this.props.prev}><img width="25" src="./banner/prev.png"/></a>                                                   
-            <a href="#" onClick={this.props.next}><img width="25" src="./banner/next.png"/></a>
+            <button className="btn btn-default" onClick={this.props.prev}><img width="25" src="./banner/prev.png"/></button>                                                   
+            <button className="btn btn-default" onClick={this.props.next}><img width="25" src="./banner/next.png"/></button>
+            <button className="btn btn-default" onClick={this.props.setwylie}><img className="transfer" width="25" src="./banner/prev.png"/></button>
             <br/><span id="address">{this.getAddress()}</span>
+
           </div>
   }  
 });
@@ -95,6 +101,7 @@ var showtext = React.createClass({
     }
     
   },
+
   getImgName: function(volpage) {
     var p=volpage.split(".");
     var v="000"+p[0];
@@ -127,10 +134,11 @@ var showtext = React.createClass({
     return s;
   },
   render: function() {
-    var content=this.renderpb(this.props.text);
+    if(this.props.wylie == false) var content=this.renderpb(this.props.text);
+    if(this.props.wylie == true) var content=this.renderpb(tibetan.romanize.toWylie(this.props.text,null,false));
     return (
       <div className="cursor">        
-        <ControlsFile page={this.props.page} bodytext={this.props.bodytext}  next={this.props.nextfile} prev={this.props.prevfile} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} />
+        <ControlsFile setwylie={this.props.setwylie} wylie={this.props.wylie} page={this.props.page} bodytext={this.props.bodytext}  next={this.props.nextfile} prev={this.props.prevfile} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} />
         <br/>
         <div onClick={this.renderPageImg} className="pagetext" dangerouslySetInnerHTML={{__html: content}} />
       </div>

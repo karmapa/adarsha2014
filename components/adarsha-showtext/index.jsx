@@ -63,7 +63,7 @@ var ControlsFile = React.createClass({
             Bampo
             <button className="btn btn-default" onClick={this.props.prev}><img width="25" src="./banner/prev.png"/></button>                                                   
             <button className="btn btn-default" onClick={this.props.next}><img width="25" src="./banner/next.png"/></button>
-            <button className="btn btn-default" onClick={this.props.setwylie}><img className="transfer" width="25" src="./banner/prev.png"/></button>
+            <button className="btn btn-default" onClick={this.props.setwylie}><img className="transfer" width="25" src="./banner/icon-towylie.png"/></button>
             <br/><span id="address">{this.getAddress()}</span>
 
           </div>
@@ -135,7 +135,7 @@ var showtext = React.createClass({
   },
   render: function() {
     if(this.props.wylie == false) var content=this.renderpb(this.props.text);
-    if(this.props.wylie == true) var content=this.renderpb(tibetan.romanize.toWylie(this.props.text,null,false));
+    if(this.props.wylie == true && this.props.text) var content=this.renderpb(tibetan.romanize.toWylie(this.props.text,null,false));
     return (
       <div className="cursor">        
         <ControlsFile setwylie={this.props.setwylie} wylie={this.props.wylie} page={this.props.page} bodytext={this.props.bodytext}  next={this.props.nextfile} prev={this.props.prevfile} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} />

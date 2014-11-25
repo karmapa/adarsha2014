@@ -199,6 +199,7 @@ var main = React.createClass({
             <ul className="nav nav-tabs" role="tablist">
               <li className="active"><a href="#Search" role="tab" data-toggle="tab"><img height="30px" src="./banner/search.png"/></a></li>
               <li><a href="#Catalog" role="tab" data-toggle="tab"><img height="30px" src="./banner/catalog.png"/></a></li>
+              <li><a href="#Catalog" role="tab" data-toggle="tab"><img height="30px" src="./banner/icon-info.png"/></a></li>
             </ul>
 
             <div className="tab-content" ref="tab-content">
@@ -211,7 +212,7 @@ var main = React.createClass({
                 <div className="center">
                   <div className="btn-group" data-toggle="buttons" ref="searchtype" onClick={this.searchtypechange}>
                     <label data-type="sutra" className="btn btn-default btn-xs" Checked>
-                    <input type="radio" name="field" autocomplete="off"><img width="25" src="./banner/prev.png"></img></input>
+                    <input type="radio" name="field" autocomplete="off"><img width="25" src="./banner/icon-sutra.png"></img></input>
                     </label>
                     <label data-type="kacha" className="btn btn-default btn-xs">
                     <input type="radio" name="field" autocomplete="off"> དཀར་ཆག་འཚོལ་བ། </input>

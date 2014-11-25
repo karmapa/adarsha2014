@@ -49,7 +49,7 @@ var main = React.createClass({
     this.decodeHashTag(window.location.hash || "#1.1");
   },
   searchtypechange:function(e) {
-    var field=e.target.dataset.type;
+    var field=e.target.parentElement.dataset.type;
     var w=this.refs.tofind.getDOMNode().value;
     var tofind=tibetan.romanize.fromWylie(w);
     if (w!=tofind && !this.state.hide) {
@@ -212,13 +212,13 @@ var main = React.createClass({
                 <div className="center">
                   <div className="btn-group" data-toggle="buttons" ref="searchtype" onClick={this.searchtypechange}>
                     <label data-type="sutra" className="btn btn-default btn-xs" Checked>
-                    <input type="radio" name="field" autocomplete="off"><img width="25" src="./banner/icon-sutra.png"></img></input>
+                    <input type="radio" name="field" autocomplete="off"><img title="sutra search" width="25" src="./banner/icon-sutra.png"/></input>
                     </label>
                     <label data-type="kacha" className="btn btn-default btn-xs">
-                    <input type="radio" name="field" autocomplete="off"> དཀར་ཆག་འཚོལ་བ། </input>
+                    <input type="radio" name="field" autocomplete="off"><img title="kacha search" width="25" src="./banner/icon-kacha.png"/></input>
                     </label>
                     <label data-type="fulltext" className="btn btn-default btn-xs" >
-                    <input type="radio" name="field" autocomplete="off"> ནང་དོན་འཚོལ་བ། </input>
+                    <input type="radio" name="field" autocomplete="off"><img title="full text search" width="25" src="./banner/icon-fulltext.png"/></input>
                     </label>
                   </div> 
                   <br></br><div className="btn-group">

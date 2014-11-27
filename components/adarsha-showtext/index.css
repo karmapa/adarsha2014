@@ -6,18 +6,21 @@
 }
 .cursor{cursor:default;}
 
+.setwylie{text-align: right;}
+
 pb:after{content: attr(n);}
 division:after{content: attr(t);
 	}
 #address{font-size: 120%;
 	cursor:default;}
 
+.transfer{float: right;}
 
-.btn:active,  
-.btn.active {
+.btn.searchmode:active,  
+.btn.active.searchmode {
   background-image: none;              
   color: #ffffff;
-  background-color: #5cb85c;           /*點擊&選取色彩  設綠色*/
+  background-color: #C2E8AB;           /*點擊&選取色彩  設綠色*/
   border: 1px solid #5cb85c;
   outline: 0;
   -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);

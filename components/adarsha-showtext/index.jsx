@@ -5,7 +5,7 @@ var api=Require("api");
 var dataset=Require("dataset");
 var tibetan=Require("ksana-document").languages.tibetan; 
 var mappings={"J":dataset.jPedurma,"D":dataset.dPedurma};
-var ControlsFile = React.createClass({
+var Controlsfile = React.createClass({
   getInitialState: function() {
     return {address:0};
   },
@@ -60,10 +60,12 @@ var ControlsFile = React.createClass({
 
   render: function() {   
    return <div className="cursor">
-            Bampo
-            <button className="btn btn-default" onClick={this.props.prev}><img width="25" src="./banner/prev.png"/></button>                                                   
-            <button className="btn btn-default" onClick={this.props.next}><img width="25" src="./banner/next.png"/></button>
-            <button className="btn btn-default" onClick={this.props.setwylie}><img className="transfer" width="25" src="./banner/icon-towylie.png"/></button>
+           
+            <button className="btn btn-default" onClick={this.props.prev}><img width="20" src="./banner/prev.png"/></button>                                                   
+            <button className="btn btn-default" onClick={this.props.next}><img width="20" src="./banner/next.png"/></button>
+            
+            <button className="btn btn-default transfer" onClick={this.props.setwylie}><img width="20" src="./banner/icon-towylie.png"/></button>
+
             <br/><span id="address">{this.getAddress()}</span>
 
           </div>
@@ -72,13 +74,13 @@ var ControlsFile = React.createClass({
 
 var showtext = React.createClass({
   getInitialState: function() {
-    return {bar: "world", pageImg:"", scroll:true};
+    return {bar: "world", pageImg:""};
   },
   componentDidUpdate:function()  {
-    if(this.props.scrollto && this.props.scrollto.match(/[ab]/) && this.state.scroll){
-      var p=this.props.scrollto.match(/\d+.(\d+)[ab]/);
+    if(this.props.scrollto && this.props.scrollto.match(/[abc]/)){
+      var p=this.props.scrollto.match(/\d+.(\d+)[abc]/);
       $(".text-content").scrollTop( 0 );
-      if(p[1]!=1){       
+      if(p[1]!=1){      
         var pb=$("a[data-pb='"+this.props.scrollto+"']");
         if(pb.length) $(".text-content").scrollTop( pb.position().top-20 );
       }          
@@ -92,12 +94,12 @@ var showtext = React.createClass({
     var pb=e.target.dataset.pb;
     if (pb || e.target.nodeName == "IMG") {
       this.setState({clickedpb:pb});  
-      this.setState({scroll:false});
+      this.setState({scrollto:null});
     }
     var img=e.target.dataset.img;
     if (img) {
       this.setState({clickedpb:null});  
-      this.setState({scroll:true}); 
+       
     }
     
   },
@@ -122,7 +124,9 @@ var showtext = React.createClass({
     var that=this;
     if(typeof s == "undefined") return "";
     s= s.replace(/<pb n="(.*?)"><\/pb>/g,function(m,m1){
-      var link='<br></br><a href="#" data-pb="'+m1+'">'+m1+'<img width="25" data-pb="'+m1+'" src="banner/imageicon.png"/></a>';
+      var p=m1.match(/\d+.(\d+[ab])/) || ["",""];
+      if(p[1] != "1a") var link='<br></br><a href="#" data-pb="'+m1+'">'+m1+'<img width="25" data-pb="'+m1+'" src="banner/imageicon.png"/></a>';
+      else var link='<a href="#" data-pb="'+m1+'">'+m1+'<img width="25" data-pb="'+m1+'" src="banner/imageicon.png"/></a>';
       if(m1 == that.state.clickedpb){
         var imgName=that.getImgName(m1);
         var corresPage=that.getCorresPage(m1);
@@ -134,11 +138,14 @@ var showtext = React.createClass({
     return s;
   },
   render: function() {
-    if(this.props.wylie == false) var content=this.renderpb(this.props.text);
+    if(this.props.wylie == false) {
+      var c=this.renderpb(this.props.text);
+      var content = c.replace(/[^།]\n/,"");
+    }
     if(this.props.wylie == true && this.props.text) var content=this.renderpb(tibetan.romanize.toWylie(this.props.text,null,false));
     return (
       <div className="cursor">        
-        <ControlsFile setwylie={this.props.setwylie} wylie={this.props.wylie} page={this.props.page} bodytext={this.props.bodytext}  next={this.props.nextfile} prev={this.props.prevfile} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} />
+        <Controlsfile setwylie={this.props.setwylie} wylie={this.props.wylie} page={this.props.page} bodytext={this.props.bodytext}  next={this.props.nextfile} prev={this.props.prevfile} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} />
         <br/>
         <div onClick={this.renderPageImg} className="pagetext" dangerouslySetInnerHTML={{__html: content}} />
       </div>

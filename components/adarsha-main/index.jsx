@@ -18,7 +18,7 @@ var Showtext=Require("showtext");
 var tibetan=Require("ksana-document").languages.tibetan; 
 var page2catalog=Require("page2catalog");
 var Namelist=Require("namelist");
-var version="v0.1.18"
+var version="v0.1.25"
 var main = React.createClass({
   componentDidMount:function() {
     var that=this;
@@ -145,12 +145,14 @@ var main = React.createClass({
     var file=this.state.bodytext.file+1;
     var page=this.state.bodytext.page || 1;
     this.showPage(file,page,false);
+    this.setState({scrollto:null});
   },
   prevfile:function() {
     var file=this.state.bodytext.file-1;
     var page=this.state.bodytext.page || 1;
     if (file<0) file=0;
     this.showPage(file,page,false);
+    this.setState({scrollto:null});
   },
   setPage:function(newpagename,file) {
     var fp=this.state.db.findPage(newpagename);
@@ -159,22 +161,13 @@ var main = React.createClass({
     }
     console.log(newpagename);
   },
-  hideinputrender: function(e) {
-    if(e.target.checked){
-      this.setState({tofind_wylie:[],hide:true});
-    } else {
-      var w=this.refs.tofind.getDOMNode().value;
-      var tofind=tibetan.romanize.fromWylie(w);
-      this.setState({tofind_wylie:tofind,hide:false});
-    }
-  },
   setwylie: function() {
-    if(this.state.wylie == false) this.setState({wylie:true});
-    if(this.state.wylie == true) this.setState({wylie:false});
+    this.setState({wylie:!this.state.wylie});
+    this.setState({scrollto:null});
   },
   textConverter:function(t) {
-    if(this.state.wylie == false) return tibetan.romanize.fromWylie(t,null,false);
-    if(this.state.wylie == true) return tibetan.romanize.toWylie(t,null,false);  
+    if(this.state.wylie == true) return tibetan.romanize.toWylie(t,null,false); 
+    return t; 
   },
   render: function() {
     if (!this.state.quota) { // install required db
@@ -189,8 +182,7 @@ var main = React.createClass({
   <div className="row">
     <div className="col-md-12">
       <div className="header">
-        <img width="100%" src="./banner/banner-06.png"/>
-
+        <img width="100%" src="./banner/banner.png"/>
       </div>
 
       <div className="row">
@@ -198,8 +190,8 @@ var main = React.createClass({
           <div className="borderright">
             <ul className="nav nav-tabs" role="tablist">
               <li className="active"><a href="#Search" role="tab" data-toggle="tab"><img height="30px" src="./banner/search.png"/></a></li>
-              <li><a href="#Catalog" role="tab" data-toggle="tab"><img height="30px" src="./banner/catalog.png"/></a></li>
-              <li><a href="#Catalog" role="tab" data-toggle="tab"><img height="30px" src="./banner/icon-info.png"/></a></li>
+              <li><a href="#Catalog" role="tab" data-toggle="tab"><img height="30px" src="./banner/icon-read.png"/></a></li>
+              <li><a href="#about" role="tab" data-toggle="tab"><img height="30px" src="./banner/icon-info.png"/></a></li>
             </ul>
 
             <div className="tab-content" ref="tab-content">
@@ -207,27 +199,29 @@ var main = React.createClass({
                 <Stacktoc textConverter={this.textConverter} showText={this.showText} showExcerpt={this.showExcerpt} hits={this.state.res.rawresult} data={this.state.toc} goVoff={this.state.goVoff} />
               </div>
 
+              <div className="tab-pane fade" id="about">               
+                <div className="center">
+                  <br/><img width="100" src="./banner/treasure_logo.png"/>
+                </div>
+              </div>
+
               <div className="tab-pane fade in active" id="Search">
+                <div className="slight"><br/></div>
                 {this.renderinputs("title")}
                 <div className="center">
                   <div className="btn-group" data-toggle="buttons" ref="searchtype" onClick={this.searchtypechange}>
-                    <label data-type="sutra" className="btn btn-default btn-xs" Checked>
-                    <input type="radio" name="field" autocomplete="off"><img title="sutra search" width="25" src="./banner/icon-sutra.png"/></input>
+                    <label data-type="sutra" className="btn btn-default btn-xs searchmode" Checked>
+                    <input type="radio" name="field" autocomplete="off"><img title="མདོ་ཡི་མཚན་འཚོལ་བ། Sutra Search" width="25" src="./banner/icon-sutra.png"/></input>
                     </label>
-                    <label data-type="kacha" className="btn btn-default btn-xs">
-                    <input type="radio" name="field" autocomplete="off"><img title="kacha search" width="25" src="./banner/icon-kacha.png"/></input>
+                    <label data-type="kacha" className="btn btn-default btn-xs searchmode">
+                    <input type="radio" name="field" autocomplete="off"><img title="དཀར་ཆགས་འཚོལ་བ། Karchak Search" width="25" src="./banner/icon-kacha.png"/></input>
                     </label>
-                    <label data-type="fulltext" className="btn btn-default btn-xs" >
-                    <input type="radio" name="field" autocomplete="off"><img title="full text search" width="25" src="./banner/icon-fulltext.png"/></input>
+                    <label data-type="fulltext" className="btn btn-default btn-xs searchmode">
+                    <input type="radio" name="field" autocomplete="off"><img title="ནང་དོན་འཚོལ་བ།  Full Text search" width="25" src="./banner/icon-fulltext.png"/></input>
                     </label>
                   </div> 
-                  <br></br><div className="btn-group">
-                    <label>
-                      <input type="checkbox" onClick={this.hideinputrender}>Hide input</input>
-                    </label>
-                  </div>
                   
-                  &nbsp;&nbsp;&nbsp;<span className="wylie">{this.state.tofind_wylie}</span>
+              
                                     
                 </div>       
                 <Namelist wylie={this.state.wylie} res_toc={this.state.res_toc} tofind={this.state.tofind} gotofile={this.gotofile} />

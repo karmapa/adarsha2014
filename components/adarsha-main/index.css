@@ -6,6 +6,10 @@
 .search{
 	}
 
+.slight{
+	line-height: 8px;
+}
+
 .nav-tabs > li, .nav-pills > li {
     float:none;
     display:inline-block;

@@ -59,12 +59,12 @@ var Controlsfile = React.createClass({
   },
 
   render: function() {   
-   return <div className="cursor">
+   return <div className="cursor controlbar">
            
             <button className="btn btn-default" onClick={this.props.prev}><img width="20" src="./banner/prev.png"/></button>                                                   
             <button className="btn btn-default" onClick={this.props.next}><img width="20" src="./banner/next.png"/></button>
-            
-            <button className="btn btn-default transfer" onClick={this.props.setwylie}><img width="20" src="./banner/icon-towylie.png"/></button>
+            <button className="btn btn-default right"><a Target="_new" href="http://www.dharma-treasure.org/en/contact-us/"><img width="25" src="./banner/icon-info.png"/></a></button>
+            <button className="btn btn-default right" onClick={this.props.setwylie}><img width="25" src="./banner/icon-towylie.png"/></button>
 
             <br/><span id="address">{this.getAddress()}</span>
 
@@ -74,18 +74,26 @@ var Controlsfile = React.createClass({
 
 var showtext = React.createClass({
   getInitialState: function() {
-    return {bar: "world", pageImg:""};
+    return {bar: "world", pageImg:"",scroll:true};
   },
-  componentDidUpdate:function()  {
-    if(this.props.scrollto && this.props.scrollto.match(/[abc]/)){
+  componentWillReceiveProps: function() {
+    this.shouldscroll=true;
+  },
+  componentDidUpdate: function()  {
+    if(this.shouldscroll && this.props.scrollto && this.props.scrollto.match(/[abc]/) ){
       var p=this.props.scrollto.match(/\d+.(\d+)[abc]/);
       $(".text-content").scrollTop( 0 );
-      if(p[1]!=1){      
-        var pb=$("a[data-pb='"+this.props.scrollto+"']");
-        if(pb.length) $(".text-content").scrollTop( pb.position().top-20 );
-      }          
-    }  
 
+      if(p[1]!=1){
+        $("a[data-pb]").removeClass("scrolled");      
+        var pb=$("a[data-pb='"+this.props.scrollto+"']");
+        if(pb.length) {
+          $(".text-content").scrollTop( pb.position().top-80 );
+          pb.addClass("scrolled");
+        }
+        this.shouldscroll=false;
+      }         
+    } 
   },
   hitClick: function(n){
     if(this.props.showExcerpt) this.props.showExcerpt(n);
@@ -94,7 +102,7 @@ var showtext = React.createClass({
     var pb=e.target.dataset.pb;
     if (pb || e.target.nodeName == "IMG") {
       this.setState({clickedpb:pb});  
-      this.setState({scrollto:null});
+      this.setState({scroll:null});
     }
     var img=e.target.dataset.img;
     if (img) {
@@ -126,7 +134,7 @@ var showtext = React.createClass({
     s= s.replace(/<pb n="(.*?)"><\/pb>/g,function(m,m1){
       var p=m1.match(/\d+.(\d+[ab])/) || ["",""];
       if(p[1] != "1a") var link='<br></br><a href="#" data-pb="'+m1+'">'+m1+'<img width="25" data-pb="'+m1+'" src="banner/imageicon.png"/></a>';
-      else var link='<a href="#" data-pb="'+m1+'">'+m1+'<img width="25" data-pb="'+m1+'" src="banner/imageicon.png"/></a>';
+      else var link='<br></br><a href="#" data-pb="'+m1+'">'+m1+'<img width="25" data-pb="'+m1+'" src="banner/imageicon.png"/></a>';
       if(m1 == that.state.clickedpb){
         var imgName=that.getImgName(m1);
         var corresPage=that.getCorresPage(m1);

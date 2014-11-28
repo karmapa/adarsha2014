@@ -190,19 +190,12 @@ var main = React.createClass({
           <div className="borderright">
             <ul className="nav nav-tabs" role="tablist">
               <li className="active"><a href="#Search" role="tab" data-toggle="tab"><img height="30px" src="./banner/search.png"/></a></li>
-              <li><a href="#Catalog" role="tab" data-toggle="tab"><img height="30px" src="./banner/icon-read.png"/></a></li>
-              <li><a href="#about" role="tab" data-toggle="tab"><img height="30px" src="./banner/icon-info.png"/></a></li>
+              <li><a href="#Catalog" role="tab" data-toggle="tab"><img height="30px" src="./banner/icon-read.png"/></a></li>              
             </ul>
 
             <div className="tab-content" ref="tab-content">
               <div className="tab-pane fade" id="Catalog">               
                 <Stacktoc textConverter={this.textConverter} showText={this.showText} showExcerpt={this.showExcerpt} hits={this.state.res.rawresult} data={this.state.toc} goVoff={this.state.goVoff} />
-              </div>
-
-              <div className="tab-pane fade" id="about">               
-                <div className="center">
-                  <br/><img width="100" src="./banner/treasure_logo.png"/>
-                </div>
               </div>
 
               <div className="tab-pane fade in active" id="Search">

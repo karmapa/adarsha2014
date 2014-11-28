@@ -1,9 +1,14 @@
 var dosearch=function(volpage,from,to) {
   var tmp=fromVolpage(volpage,from,to);
     //corresFromVolpage= [經號],[範圍],[對照經號],[對照範圍],[對照行],[K經號]
-  var parse_tmp=parseVolPage(tmp);
-  var corresPage=snap2realpage(parse_tmp);
-  return corresPage.vol+"."+corresPage.page+corresPage.side;
+  if(tmp){
+	  var parse_tmp=parseVolPage(tmp);
+	  var corresPage=snap2realpage(parse_tmp);
+	  return corresPage.vol+"."+corresPage.page+corresPage.side;
+	} else {
+		console.log("no corres page");
+		return "";
+	}
 }
 
 var fromVolpage=function(volpage,from,to){
@@ -21,7 +26,7 @@ var fromVolpage=function(volpage,from,to){
     //out.push([range[0]],[range[1]],[corres_range[0][0]],[corres_range[0][1]],[corresLine],[range[2]]);
           // [經號],[範圍],[對照經號],[對照範圍],[對照行],[K經號]
     return corresLine;
-  }
+  } else return null;
 }
 
 var countCorresLine=function(volpage,range,corres_range,start,corres_start){//volpage=使用者輸入的volpage

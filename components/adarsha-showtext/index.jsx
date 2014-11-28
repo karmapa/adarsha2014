@@ -63,7 +63,7 @@ var Controlsfile = React.createClass({
             
             <button className="btn btn-default" onClick={this.props.prev}><img width="20" src="./banner/prev.png"/></button>                                                   
             <button className="btn btn-default" onClick={this.props.next}><img width="20" src="./banner/next.png"/></button>
-            <button className="btn btn-default right"><a Target="_new" href="http://www.dharma-treasure.org/en/contact-us/"><img width="20" src="./banner/icon-info.png"/></a></button>
+            <button className="btn btn-default right"><a href="http://www.dharma-treasure.org/en/contact-us/" target="_new"><img width="20" src="./banner/icon-info.png"/></a></button>
             <button className="btn btn-default right" onClick={this.props.setwylie}><img width="20" src="./banner/icon-towylie.png"/></button>
             <br/>
             <br/><span id="address">{this.getAddress()}</span>
@@ -74,7 +74,7 @@ var Controlsfile = React.createClass({
 
 var showtext = React.createClass({
   getInitialState: function() {
-    return {bar: "world", pageImg:"",scroll:true};
+    return {bar: "world", pageImg:""};
   },
   componentWillReceiveProps: function() {
     this.shouldscroll=true;
@@ -106,7 +106,6 @@ var showtext = React.createClass({
     if(pb == "1.1a") return;
     if (pb || e.target.nodeName == "IMG") {
       this.setState({clickedpb:pb});  
-      this.setState({scroll:null});
     }
     var img=e.target.dataset.img;
     if (img) {
@@ -141,7 +140,7 @@ var showtext = React.createClass({
       if(m1 == that.state.clickedpb){
         var imgName=that.getImgName(m1);
         var corresPage=that.getCorresPage(m1);
-        link='<br></br>'+m1+'&nbsp;(Derge:'+corresPage+')<img data-img="'+m1+'" width="100%" src="../adarsha_img/lijiang/'+imgName+'.jpg"/><br></br>';
+        link='<br></br><a href="#" data-pb="'+m1+'">'+m1+'</a>&nbsp;(Derge:'+corresPage+')<img data-img="'+m1+'" width="100%" src="../adarsha_img/lijiang/'+imgName+'.jpg"/><br></br>';
       }
       return link;
     });
@@ -149,11 +148,11 @@ var showtext = React.createClass({
     return s;
   },
   render: function() {
-    if(this.props.wylie == false) {
-      var c=this.renderpb(this.props.text);
-      var content = c.replace(/[^།]\n/,"");
-    }
-    if(this.props.wylie == true && this.props.text) var content=this.renderpb(tibetan.romanize.toWylie(this.props.text,null,false));
+
+    var content=this.props.text||"";
+    if (this.props.wylie) content=tibetan.romanize.toWylie(content,null,false);
+    content=this.renderpb(content.replace(/[^།]\n/,""));
+ 
     return (
       <div className="cursor">        
         <Controlsfile setwylie={this.props.setwylie} wylie={this.props.wylie} page={this.props.page} bodytext={this.props.bodytext}  next={this.props.nextfile} prev={this.props.prevfile} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} />

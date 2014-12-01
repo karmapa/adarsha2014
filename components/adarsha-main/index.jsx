@@ -120,7 +120,7 @@ var main = React.createClass({
   },
   showExcerpt:function(n) {
     var voff=this.state.toc[n].voff;
-    this.dosearch(null,null,voff);
+    this.dosearch(null,null,voff,"fulltext",this.state.tofind);
   },
   gotofile:function(vpos){
     var res=kse.vpos2filepage(this.state.db,vpos);

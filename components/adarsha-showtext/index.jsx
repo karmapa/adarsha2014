@@ -103,7 +103,6 @@ var showtext = React.createClass({
   },
   renderPageImg: function(e) {
     var pb=e.target.dataset.pb;
-    if(pb == "1.1a") return;
     if (pb || e.target.nodeName == "IMG") {
       this.setState({clickedpb:pb});  
     }

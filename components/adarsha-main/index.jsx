@@ -204,13 +204,13 @@ var main = React.createClass({
                 <div className="center">
                   <div className="btn-group" data-toggle="buttons" ref="searchtype" onClick={this.searchtypechange}>
                     <label data-type="sutra" className="btn btn-default btn-xs searchmode" Checked>
-                    <input type="radio" name="field" autocomplete="off"><img title="མདོ་ཡི་མཚན་འཚོལ་བ། Sutra Search" width="25" src="./banner/icon-sutra.png"/></input>
+                    <input type="radio" name="field" autocomplete="off"><img title="མདོ་མིང་འཚོལ་བ། Sutra Search" width="25" src="./banner/icon-sutra.png"/></input>
                     </label>
                     <label data-type="kacha" className="btn btn-default btn-xs searchmode">
-                    <input type="radio" name="field" autocomplete="off"><img title="དཀར་ཆགས་འཚོལ་བ། Karchak Search" width="25" src="./banner/icon-kacha.png"/></input>
+                    <input type="radio" name="field" autocomplete="off"><img title="དཀར་ཆག་འཚོལ་བ། Karchak Search" width="25" src="./banner/icon-kacha.png"/></input>
                     </label>
                     <label data-type="fulltext" className="btn btn-default btn-xs searchmode">
-                    <input type="radio" name="field" autocomplete="off"><img title="ནང་དོན་འཚོལ་བ།  Full Text search" width="25" src="./banner/icon-fulltext.png"/></input>
+                    <input type="radio" name="field" autocomplete="off"><img title="ནང་དོན་འཚོལ་བ།  Full Text Search" width="25" src="./banner/icon-fulltext.png"/></input>
                     </label>
                   </div> 
                   

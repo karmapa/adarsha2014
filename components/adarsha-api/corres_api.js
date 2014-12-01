@@ -15,9 +15,11 @@ var fromVolpage=function(volpage,from,to){
   //var volpage=document.getElementById("input").value;
   var out=[];
   var range=findRange(volpage,from);//range=[J經號,J範圍,K經號]
-  var corres_range=findCorresRange(range[2],to);//corres_range=[D經號,D範圍,下一項D經號,下一項D範圍]
+  if(range) {
+  	var corres_range=findCorresRange(range[2],to);//corres_range=[D經號,D範圍,下一項D經號,下一項D範圍]
+  } else return null;
   //算J和D的範圍
-  if(corres_range.length != 0){
+  if(corres_range.length != 0 ){
     var vRange=countRange(range[1],range[3],range[0],range[2]);
     //vRange input為D範圍, 下一項D範圍, D經, 下一項D經 //output為[vStart,vEnd-vStart]
     var corres_vRange=countRange(corres_range[0][1],corres_range[corres_range.length-1][1]);//[vStart,vEnd-vStart]

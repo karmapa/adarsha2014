@@ -29,7 +29,6 @@ var Controlsfile = React.createClass({
     }
     return 0; //return root node
   },
-
   enumAncestors: function(cur) {
     var toc=this.props.toc;
     if (!toc || !toc.length) return;
@@ -46,6 +45,10 @@ var Controlsfile = React.createClass({
       n--;
     }
     parents.unshift(0); //first ancestor is root node
+    if(this.props.dataN && toc[this.props.dataN].depth==toc[this.props.dataN+1].depth){
+      parents.push(this.props.dataN);
+    }
+
     return parents;
   },
   getAddress: function() {
@@ -154,7 +157,7 @@ var showtext = React.createClass({
  
     return (
       <div className="cursor">        
-        <Controlsfile setwylie={this.props.setwylie} wylie={this.props.wylie} page={this.props.page} bodytext={this.props.bodytext}  next={this.props.nextfile} prev={this.props.prevfile} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} />
+        <Controlsfile dataN={this.props.dataN} setwylie={this.props.setwylie} wylie={this.props.wylie} page={this.props.page} bodytext={this.props.bodytext}  next={this.props.nextfile} prev={this.props.prevfile} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} />
         <br/>
         <br/>
         <div onClick={this.renderPageImg} className="pagetext" dangerouslySetInnerHTML={{__html: content}} />

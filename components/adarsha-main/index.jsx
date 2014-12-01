@@ -26,7 +26,7 @@ var main = React.createClass({
   }, 
   getInitialState: function() {
     document.title=version+"-adarsha";
-    return {dialog:null,res:{},res_toc:[],bodytext:{file:0,page:0},db:null,toc_result:[],page:0,field:"sutra",scrollto:0,hide:false, wylie:false};
+    return {dialog:null,res:{},res_toc:[],bodytext:{file:0,page:0},db:null,toc_result:[],page:0,field:"sutra",scrollto:0,hide:false, wylie:false, dataN:null};
   },
   componentDidUpdate:function()  {
     var ch=document.documentElement.clientHeight;
@@ -139,7 +139,8 @@ var main = React.createClass({
   }, 
   showText:function(n) {
     var res=kse.vpos2filepage(this.state.db,this.state.toc[n].voff);
-    if(res.file != -1) this.showPage(res.file,res.page,true);    
+    if(res.file != -1) this.showPage(res.file,res.page,true);
+    this.setState({dataN:n});    
   },
   nextfile:function() {
     var file=this.state.bodytext.file+1;
@@ -227,7 +228,7 @@ var main = React.createClass({
         <div className="col-md-9">
           
           <div className="text text-content" ref="text-content">
-          <Showtext setwylie={this.setwylie} wylie={this.state.wylie} page={this.state.page}  bodytext={this.state.bodytext} text={text} nextfile={this.nextfile} prevfile={this.prevfile} setpage={this.setPage} db={this.state.db} toc={this.state.toc} scrollto={this.state.scrollto} />
+          <Showtext dataN={this.state.dataN} setwylie={this.setwylie} wylie={this.state.wylie} page={this.state.page}  bodytext={this.state.bodytext} text={text} nextfile={this.nextfile} prevfile={this.prevfile} setpage={this.setPage} db={this.state.db} toc={this.state.toc} scrollto={this.state.scrollto} />
           </div>
         </div>
       </div>

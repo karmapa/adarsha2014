@@ -121,6 +121,8 @@ var main = React.createClass({
   showExcerpt:function(n) {
     var voff=this.state.toc[n].voff;
     this.dosearch(null,null,voff,"fulltext",this.state.tofind);
+    var searchtabid=$(".tab-pane#Search").attr("id");
+    $('[href=#'+searchtabid+']').tab('show');
   },
   gotofile:function(vpos){
     var res=kse.vpos2filepage(this.state.db,vpos);

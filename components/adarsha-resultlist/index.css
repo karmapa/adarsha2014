@@ -6,3 +6,7 @@
 hl{color:red;}
 hl[n="1"]{color: blue;}
 hl[n="2"]{color: green;}
+
+.hl {color:red;}
+.hl1 {color: blue;}
+.hl2 {color: green;}

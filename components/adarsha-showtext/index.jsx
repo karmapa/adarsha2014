@@ -82,15 +82,18 @@ var showtext = React.createClass({
   componentWillReceiveProps: function() {
     this.shouldscroll=true;
   },
+  componentDidMount:function() {
+    this.textcontent=$(".text-content");
+  },
   componentDidUpdate: function()  {
     if(this.shouldscroll && this.props.scrollto && this.props.scrollto.match(/[abc]/) ){
       var p=this.props.scrollto.match(/\d+.(\d+)[abc]/);
-      $(".text-content").scrollTop( 0 );
+      this.textcontent.scrollTop( 0 );
       if(p[1]!=1){
         $("a[data-pb]").removeClass("scrolled");      
         var pb=$("a[data-pb='"+this.props.scrollto+"']");
         if(pb.length) {
-          $(".text-content").scrollTop( pb.position().top-120 );
+          this.textcontent.scrollTop( pb.position().top-120 );
           pb.addClass("scrolled");
         }
         this.shouldscroll=false;
@@ -156,7 +159,7 @@ var showtext = React.createClass({
     content=this.renderpb(content.replace(/[^།]\n/,""));
  
     return (
-      <div className="cursor">        
+      <div className="cursor">
         <Controlsfile dataN={this.props.dataN} setwylie={this.props.setwylie} wylie={this.props.wylie} page={this.props.page} bodytext={this.props.bodytext}  next={this.props.nextfile} prev={this.props.prevfile} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} />
         <br/>
         <br/>

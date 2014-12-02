@@ -121,8 +121,8 @@ var main = React.createClass({
   showExcerpt:function(n) {
     var voff=this.state.toc[n].voff;
     this.dosearch(null,null,voff,"fulltext",this.state.tofind);
-    var searchtabid=$(".tab-pane#Search").attr("id");
-    $('[href=#'+searchtabid+']').tab('show');
+   // var searchtabid=$(".tab-pane#Search").attr("id");
+    $('.nav a[href=#Search]').tab('show');
   },
   gotofile:function(vpos){
     var res=kse.vpos2filepage(this.state.db,vpos);
@@ -206,7 +206,7 @@ var main = React.createClass({
                 {this.renderinputs("title")}
                 <div className="center">
                   <div className="btn-group" data-toggle="buttons" ref="searchtype" onClick={this.searchtypechange}>
-                    <label data-type="sutra" className="btn btn-default btn-xs searchmode" Checked>
+                    <label data-type="sutra" className="btn btn-default btn-xs searchmode active">
                     <input type="radio" name="field" autocomplete="off"><img title="མདོ་མིང་འཚོལ་བ། Sutra Search" width="25" src="./banner/icon-sutra.png"/></input>
                     </label>
                     <label data-type="kacha" className="btn btn-default btn-xs searchmode">

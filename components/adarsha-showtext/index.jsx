@@ -52,6 +52,7 @@ var Controlsfile = React.createClass({
     return parents;
   },
   getAddress: function() {
+    if (!this.props.bodytext)return;
     var file=this.props.bodytext.file;
     var page=this.props.page;
     var res=this.filepage2vpos(file,page);

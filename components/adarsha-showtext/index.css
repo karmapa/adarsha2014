@@ -1,7 +1,8 @@
 .showtext {font-family: ctrc-uchen;
 	cursor:text;}
-.pagetext {line-height: 30px;
-	font-size: 120%;
+.pagetext {
+  line-height: 30px;
+	font-size: 125%;
 	cursor:default;
 }
 .cursor{cursor:default;}

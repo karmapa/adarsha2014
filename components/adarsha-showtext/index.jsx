@@ -7,9 +7,8 @@ var tibetan=Require("ksana-document").languages.tibetan;
 var mappings={"J":dataset.jPedurma,"D":dataset.dPedurma};
 var Controlsfile = React.createClass({
   getInitialState: function() {
-    return {address:0};
+    return {address:0,fontsize:125};
   },
-
   filepage2vpos:function(file,page) {
     var out=[];
     if(!this.props.db) return 0;
@@ -62,14 +61,41 @@ var Controlsfile = React.createClass({
    if(this.props.wylie == true) return tibetan.romanize.toWylie(res,null,false);
     
   },
-
+  increasefontsize:function() {
+    var fontsize=parseFloat($(".pagetext").css("font-size"));
+    fontsize=fontsize*1.1;
+    if (fontsize>40) return;
+    $(".pagetext").css("font-size",fontsize+"px")
+                  .css("line-height",(fontsize*1.5)+"px");
+  },
+  decreasefontsize:function() {
+    var fontsize=parseFloat($(".pagetext").css("font-size"));
+    fontsize=fontsize/1.1;
+    if (fontsize<12) return;
+    $(".pagetext").css("font-size",fontsize+"px")
+    .css("line-height",(fontsize*1.5)+"px");
+  },
+  renderSideMenuButton:function() {
+    if (this.props.sidemenu) {
+      return <button className="btn btn-default" title="Hide Side Menu" onClick={this.props.toggleMenu}><img width="20" src="./banner/hidemenu.png"/></button>
+    } else {
+      return <button className="btn btn-default" title="Show Side Menu" onClick={this.props.toggleMenu}><img width="20" src="./banner/showmenu.png"/></button>
+    }
+  },
   render: function() {   
    return <div className="cursor controlbar">
-            
-            <button className="btn btn-default" onClick={this.props.prev}><img width="20" src="./banner/prev.png"/></button>                                                   
-            <button className="btn btn-default" onClick={this.props.next}><img width="20" src="./banner/next.png"/></button>
-            <button className="btn btn-default right"><a href="http://www.dharma-treasure.org/en/contact-us/" target="_new"><img width="20" src="./banner/icon-info.png"/></a></button>
-            <button className="btn btn-default right" onClick={this.props.setwylie}><img width="20" src="./banner/icon-towylie.png"/></button>
+            {this.renderSideMenuButton()}            
+            <button className="btn btn-default" title="Previous File" onClick={this.props.prev}><img width="20" src="./banner/prev.png"/></button>
+            <button className="btn btn-default" title="Next File" onClick={this.props.next}><img width="20" src="./banner/next.png"/></button>
+
+
+            <button className="btn btn-default right" title="Contact Us"><a href="http://www.dharma-treasure.org/en/contact-us/" target="_new"><img width="20" src="./banner/icon-info.png"/></a></button>
+            <button className="btn btn-default right" title="Toggle Wylie Transliteration" onClick={this.props.setwylie}><img width="20" src="./banner/icon-towylie.png"/></button>
+
+            <button className="btn btn-default right" title="Increase Font Size" onClick={this.increasefontsize}><img width="20" src="./banner/increasefontsize.png"/></button>
+            <button className="btn btn-default right" title="Decrease Font Size" onClick={this.decreasefontsize}><img width="20" src="./banner/decreasefontsize.png"/></button>
+
+
             <br/>
             <br/><span id="address">{this.getAddress()}</span>
 
@@ -186,7 +212,7 @@ var showtext = React.createClass({
  
     return (
       <div className="cursor">
-        <Controlsfile dataN={this.props.dataN} setwylie={this.props.setwylie} wylie={this.props.wylie} page={this.props.page} bodytext={this.props.bodytext}  next={this.props.nextfile} prev={this.props.prevfile} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} />
+        <Controlsfile sidemenu={this.props.sidemenu} toggleMenu={this.props.toggleMenu} dataN={this.props.dataN} setwylie={this.props.setwylie} wylie={this.props.wylie} page={this.props.page} bodytext={this.props.bodytext}  next={this.props.nextfile} prev={this.props.prevfile} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} />
         <br/>
         <br/>
         <div onClick={this.togglePageImg} className="pagetext" dangerouslySetInnerHTML={{__html: content}} />

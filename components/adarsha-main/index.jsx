@@ -18,21 +18,39 @@ var Showtext=Require("showtext");
 var tibetan=Require("ksana-document").languages.tibetan; 
 var page2catalog=Require("page2catalog");
 var Namelist=Require("namelist");
-var version="v0.1.25"
+var version="v0.1.26";
 var main = React.createClass({
+  hideBanner:function() {
+    var header=$("div.header");
+    var that=this;
+    header.animate({height: "0px"}, 2000, function() {
+      header.hide();
+      that.bannerHeight=0;
+      that.setBannerHeight(0);
+    });
+  },
+  toggleMenu:function(){
+    this.setState({sidemenu:!this.state.sidemenu});
+  },
+  bannerHeight:100,
   componentDidMount:function() {
     var that=this;
-    //window.onhashchange = function () {that.goHashTag();}   
+    setTimeout(function(){
+      that.hideBanner();
+    },5000);
+    //window.onhashchange = function () {that.goHashTag();} 
   }, 
   getInitialState: function() {
     document.title=version+"-adarsha";
-    return {dialog:null,res:{},res_toc:[],bodytext:{file:0,page:0},db:null,toc_result:[],page:0,field:"sutra",scrollto:0,hide:false, wylie:false, dataN:null};
+    return {sidemenu:true,dialog:null,res:{},res_toc:[],bodytext:{file:0,page:0},db:null,toc_result:[],page:0,field:"sutra",scrollto:0,hide:false, wylie:false, dataN:null};
+  },
+  setBannerHeight:function(bannerHeight) {
+    var ch=document.documentElement.clientHeight;
+    this.refs["text-content"].getDOMNode().style.height=ch-bannerHeight+"px";
+    this.refs["tab-content"].getDOMNode().style.height=(ch-bannerHeight-40)+"px";
   },
   componentDidUpdate:function()  {
-    var ch=document.documentElement.clientHeight;
-    var banner=100;
-    this.refs["text-content"].getDOMNode().style.height=ch-banner+"px";
-    this.refs["tab-content"].getDOMNode().style.height=(ch-banner-40)+"px";
+    this.setBannerHeight(this.bannerHeight);
   },  
   encodeHashTag:function(file,p) { //file/page to hash tag
     var f=parseInt(file)+1;
@@ -41,7 +59,10 @@ var main = React.createClass({
   decodeHashTag:function(s) {
     var fp=s.match(/#(\d+)\.(.*)/);
     var p=parseInt(fp[2]);
+
     var file=parseInt(fp[1])-1;
+    if (file<0) file=0;
+    if (p<0) p=0;
     var pagename=this.state.db.getFilePageNames(file)[p]; 
     this.setPage(pagename,file);
   },
@@ -88,7 +109,7 @@ var main = React.createClass({
     if (this.state.db) {
       return (    
         <div>
-        <input className="tofind form-control input-small" ref="tofind" onInput={this.tofindchange} placeholder="Type something to start searching"></input>
+        <input className="tofind form-control" ref="tofind" onInput={this.tofindchange} placeholder="Type something to start searching"></input>
         </div>
         )          
     } else {
@@ -187,6 +208,13 @@ var main = React.createClass({
         text=this.state.bodytext.text;
         pagename=this.state.bodytext.pagename;
     }
+    var bodytextcols=9;
+    var menuclass="col-md-3";
+    if (!this.state.sidemenu) {
+      bodytextcols=12;
+      menuclass="hidemenu";
+    }
+
     return (
   <div className="row">
     <div className="col-md-12">
@@ -195,11 +223,11 @@ var main = React.createClass({
       </div>
 
       <div className="row">
-        <div className="col-md-3">
+        <div className={menuclass}>
           <div className="borderright">
             <ul className="nav nav-tabs" role="tablist">
-              <li className="active"><a href="#Catalog" role="tab" data-toggle="tab"><img width="25" src="./banner/icon-read.png"/></a></li>
-              <li><a href="#Search" role="tab" data-toggle="tab"><img width="25" src="./banner/search.png"/></a></li>              
+              <li className="active"><a href="#Catalog" role="tab" data-toggle="tab" title="Catalog"><img width="25" src="./banner/icon-read.png"/></a></li>
+              <li><a href="#Search" role="tab" data-toggle="tab" title="Search"><img width="25" src="./banner/search.png"/></a></li>              
             </ul>
 
             <div className="tab-content" ref="tab-content">
@@ -235,10 +263,10 @@ var main = React.createClass({
           </div>     
         </div>
 
-        <div className="col-md-9">
+        <div className={"col-md-"+bodytextcols}>
           
           <div className="text text-content" ref="text-content">
-          <Showtext dataN={this.state.dataN} setwylie={this.setwylie} wylie={this.state.wylie} page={this.state.page}  bodytext={this.state.bodytext} text={text} nextfile={this.nextfile} prevfile={this.prevfile} setpage={this.setPage} db={this.state.db} toc={this.state.toc} scrollto={this.state.scrollto} />
+          <Showtext sidemenu={this.state.sidemenu} toggleMenu={this.toggleMenu} dataN={this.state.dataN} setwylie={this.setwylie} wylie={this.state.wylie} page={this.state.page}  bodytext={this.state.bodytext} text={text} nextfile={this.nextfile} prevfile={this.prevfile} setpage={this.setPage} db={this.state.db} toc={this.state.toc} scrollto={this.state.scrollto} />
           </div>
         </div>
       </div>

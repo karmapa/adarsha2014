@@ -66,14 +66,14 @@ var Controlsfile = React.createClass({
     fontsize=fontsize*1.1;
     if (fontsize>40) return;
     $(".pagetext").css("font-size",fontsize+"px")
-                  .css("line-height",(fontsize*1.5)+"px");
+                  .css("line-height",(fontsize*1.7)+"px");
   },
   decreasefontsize:function() {
     var fontsize=parseFloat($(".pagetext").css("font-size"));
     fontsize=fontsize/1.1;
     if (fontsize<12) return;
     $(".pagetext").css("font-size",fontsize+"px")
-    .css("line-height",(fontsize*1.5)+"px");
+    .css("line-height",(fontsize*1.7)+"px");
   },
   renderSideMenuButton:function() {
     if (this.props.sidemenu) {

@@ -7,19 +7,16 @@ var searchbar = React.createClass({
   getInitialState: function() {
     return {find:[],field:[]};
   },
-  gettofind: function() {
+  dosearch:function() {
     var find=this.refs.tofind.getDOMNode().value;
-    this.setState({find:find});
-  },
-  getfield: function(e) {
     var field=e.target.dataset.type;
-    this.setState({field:field});   
+    this.props.dosearch(null,null,0,field,tofind);
   },
   render: function() {
     return (
       <div>
-        <input className="form-control" onInput={this.gettofind} ref="tofind" defaultValue="byang chub"></input>
-        <div className="btn-group" data-toggle="buttons" ref="searchtype" onClick={this.getfield}>
+        <input className="form-control" onInput={this.dosearch} ref="tofind" defaultValue="byang chub"></input>
+        <div className="btn-group" data-toggle="buttons" ref="searchtype" onClick={this.dosearch}>
           <label data-type="sutra" className="btn btn-success">
           <input type="radio" name="field" autocomplete="off">Sutra</input>
           </label>
@@ -30,7 +27,6 @@ var searchbar = React.createClass({
           <input type="radio" name="field" autocomplete="off">Text</input>
           </label>
         </div>
-        {this.props.dosearch(null,null,0,this.state.field,this.state.tofind)}
       </div>
     );
   }

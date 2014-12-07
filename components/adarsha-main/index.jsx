@@ -47,18 +47,25 @@ var main = React.createClass({
   },
   goHashTag:function() {
     this.decodeHashTag(window.location.hash || "#1.1");
-  },
+  
+  },  
   searchtypechange:function(e) {
-    var field=e.target.parentElement.dataset.type;
-    var w=this.refs.tofind.getDOMNode().value;
-    var tofind=tibetan.romanize.fromWylie(w);
-    if (w!=tofind && !this.state.hide) {
-      this.setState({tofind_wylie:tofind});
-    } else this.setState({tofind_wylie:null});
+    this.refs.tofind.getDOMNode().focus();
     this.dosearch(null,null,0,field,tofind);
-    if(field) this.setState({field:field});
+  },
+  tofindchange:function(e) {
+    clearTimeout(this.tofindtimer);
+    var that=this;
+    this.tofindtimer=setTimeout(function(){
+      var field=$(that.refs.searchtype.getDOMNode()).find(".active")[0].dataset.type;
+      var tofind=that.refs.tofind.getDOMNode().value.trim();
+      that.dosearch(null,null,0,field,tofind);
+    },300);
+    //var field=e.target.parentElement.dataset.type;
   },
   dosearch: function(e,reactid,start,field,tofind){
+    var tofind=tibetan.romanize.fromWylie(tofind);
+
     field=field || this.state.field;
     if(field == "fulltext"){
       kse.search(this.state.db,tofind,{range:{start:start,maxhit:100}},function(data){ //call search engine          
@@ -81,7 +88,7 @@ var main = React.createClass({
     if (this.state.db) {
       return (    
         <div>
-        <input className="form-control input-small" ref="tofind" onInput={this.searchtypechange} placeholder="Type something to start searching"></input>
+        <input className="form-control input-small" ref="tofind" onInput={this.tofindchange} placeholder="Type something to start searching"></input>
         </div>
         )          
     } else {
@@ -126,9 +133,9 @@ var main = React.createClass({
   },
   gotofile:function(vpos){
     var res=kse.vpos2filepage(this.state.db,vpos);
-    this.showPage(res.file,res.page,false);
+    this.showPage(res.file,res.page);
   },
-  showPage:function(f,p,hideResultlist) {  
+  showPage:function(f,p) {  
     window.location.hash = this.encodeHashTag(f,p);
     var that=this;
     var pagename=this.state.db.getFilePageNames(f)[p];
@@ -136,25 +143,24 @@ var main = React.createClass({
 
     kse.highlightFile(this.state.db,f,{q:this.state.tofind},function(data){
       that.setState({bodytext:data,page:p});
-      if (hideResultlist) that.setState({res:[]});     
     });
   }, 
   showText:function(n) {
     var res=kse.vpos2filepage(this.state.db,this.state.toc[n].voff);
-    if(res.file != -1) this.showPage(res.file,res.page,true);
+    if(res.file != -1) this.showPage(res.file,res.page);
     this.setState({dataN:n});    
   },
   nextfile:function() {
     var file=this.state.bodytext.file+1;
     var page=this.state.bodytext.page || 1;
-    this.showPage(file,page,false);
+    this.showPage(file,page);
     this.setState({scrollto:null});
   },
   prevfile:function() {
     var file=this.state.bodytext.file-1;
     var page=this.state.bodytext.page || 1;
     if (file<0) file=0;
-    this.showPage(file,page,false);
+    this.showPage(file,page);
     this.setState({scrollto:null});
   },
   setPage:function(newpagename,file) {
@@ -198,7 +204,9 @@ var main = React.createClass({
 
             <div className="tab-content" ref="tab-content">
               <div className="tab-pane fade in active" id="Catalog">               
-                <Stacktoc textConverter={this.textConverter} showText={this.showText} showExcerpt={this.showExcerpt} hits={this.state.res.rawresult} data={this.state.toc} goVoff={this.state.goVoff} />
+                <Stacktoc textConverter={this.textConverter} showText={this.showText} 
+                showExcerpt={this.showExcerpt} 
+                hits={this.state.res.rawresult} data={this.state.toc} goVoff={this.state.goVoff} />
               </div>
 
               <div className="tab-pane fade" id="Search">
@@ -206,13 +214,13 @@ var main = React.createClass({
                 {this.renderinputs("title")}
                 <div className="center">
                   <div className="btn-group" data-toggle="buttons" ref="searchtype" onClick={this.searchtypechange}>
-                    <label data-type="sutra" className="btn btn-default btn-xs searchmode active">
+                    <label data-type="sutra" className="btn btn-default btn-xs searchmode">
                     <input type="radio" name="field" autocomplete="off"><img title="མདོ་མིང་འཚོལ་བ། Sutra Search" width="25" src="./banner/icon-sutra.png"/></input>
                     </label>
                     <label data-type="kacha" className="btn btn-default btn-xs searchmode">
                     <input type="radio" name="field" autocomplete="off"><img title="དཀར་ཆག་འཚོལ་བ། Karchak Search" width="25" src="./banner/icon-kacha.png"/></input>
                     </label>
-                    <label data-type="fulltext" className="btn btn-default btn-xs searchmode">
+                    <label data-type="fulltext" className="btn btn-default btn-xs searchmode active">
                     <input type="radio" name="field" autocomplete="off"><img title="ནང་དོན་འཚོལ་བ།  Full Text Search" width="25" src="./banner/icon-fulltext.png"/></input>
                     </label>
                   </div> 

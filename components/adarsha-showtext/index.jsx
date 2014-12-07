@@ -9,6 +9,7 @@ var Controlsfile = React.createClass({
   getInitialState: function() {
     return {address:0};
   },
+
   filepage2vpos:function(file,page) {
     var out=[];
     if(!this.props.db) return 0;
@@ -78,7 +79,13 @@ var Controlsfile = React.createClass({
 
 var showtext = React.createClass({
   getInitialState: function() {
-    return {bar: "world", pageImg:""};
+    return {bar: "world", pageImg:"",clickedpb:[]};
+  },
+  shouldComponentUpdate:function(nextProps,nextState) {
+    if (nextProps.page!=this.props.page) {
+      nextState.clickedpb=[]; //reset image
+    }
+    return true;
   },
   componentWillReceiveProps: function() {
     this.shouldscroll=true;
@@ -108,17 +115,35 @@ var showtext = React.createClass({
   hitClick: function(n){
     if(this.props.showExcerpt) this.props.showExcerpt(n);
   },
-  renderPageImg: function(e) {
-    var pb=e.target.dataset.pb;
-    if (pb || e.target.nodeName == "IMG") {
-      this.setState({clickedpb:pb});  
-    }
-    var img=e.target.dataset.img;
-    if (img) {
-      this.setState({clickedpb:null});  
-       
-    }
-    
+  removeImage:function(pb) {
+    var clickedpb=this.state.clickedpb;
+    var idx=clickedpb.indexOf(pb);
+    if (idx>-1) clickedpb.splice(idx,1);
+    this.setState({clickedpb:clickedpb});
+  },
+  addImage:function(pb) {
+    var clickedpb=this.state.clickedpb;
+    var idx=clickedpb.indexOf(clickedpb);
+    if (idx==-1) clickedpb.push(pb);
+    this.setState({clickedpb:clickedpb});
+  },
+  togglePageImg: function(e) {
+    if (e&& e.target && e.target.nextSibling && e.target.nextSibling.nextSibling &&
+      e.target.nextSibling.nextSibling.nodeName=="IMG") {
+      var pb=e.target.dataset.pb;
+      this.removeImage(pb);
+    } else {
+      var pb=e.target.dataset.pb;
+      if (pb) {
+        this.addImage(pb);// this.setState({clickedpb:pb});  
+      } else {
+        if (e && e.target && e.target.previousSibling && e.target.previousSibling
+          && e.target.previousSibling.previousSibling ){
+          var pb=e.target.previousSibling.previousSibling.dataset.pb;
+          this.removeImage(pb);          
+        }
+      }  
+    }    
   },
 
   getImgName: function(volpage) {
@@ -143,7 +168,7 @@ var showtext = React.createClass({
     s= s.replace(/<pb n="(.*?)"><\/pb>/g,function(m,m1){
       var p=m1.match(/\d+.(\d+[ab])/) || ["",""];
       var link='<br></br><a href="#" data-pb="'+m1+'">'+m1+'<img width="25" data-pb="'+m1+'" src="banner/imageicon.png"/></a>';
-      if(m1 == that.state.clickedpb){
+      if(that.state.clickedpb.indexOf(m1)>-1){
         var imgName=that.getImgName(m1);
         var corresPage=that.getCorresPage(m1);
         link='<br></br><a href="#" data-pb="'+m1+'">'+m1+'</a>&nbsp;(Derge:'+corresPage+')<img data-img="'+m1+'" width="100%" src="../adarsha_img/lijiang/'+imgName+'.jpg"/><br></br>';
@@ -164,7 +189,7 @@ var showtext = React.createClass({
         <Controlsfile dataN={this.props.dataN} setwylie={this.props.setwylie} wylie={this.props.wylie} page={this.props.page} bodytext={this.props.bodytext}  next={this.props.nextfile} prev={this.props.prevfile} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} />
         <br/>
         <br/>
-        <div onClick={this.renderPageImg} className="pagetext" dangerouslySetInnerHTML={{__html: content}} />
+        <div onClick={this.togglePageImg} className="pagetext" dangerouslySetInnerHTML={{__html: content}} />
       </div>
     );
   }

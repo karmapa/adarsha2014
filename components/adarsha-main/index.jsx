@@ -51,20 +51,20 @@ var main = React.createClass({
   },  
   searchtypechange:function(e) {
     this.refs.tofind.getDOMNode().focus();
-    this.dosearch(null,null,0,field,tofind);
+    this.dosearch(null,null,0);
   },
   tofindchange:function(e) {
     clearTimeout(this.tofindtimer);
     var that=this;
     this.tofindtimer=setTimeout(function(){
-      var field=$(that.refs.searchtype.getDOMNode()).find(".active")[0].dataset.type;
-      var tofind=that.refs.tofind.getDOMNode().value.trim();
-      that.dosearch(null,null,0,field,tofind);
+      that.dosearch(null,null,0);
     },300);
     //var field=e.target.parentElement.dataset.type;
   },
-  dosearch: function(e,reactid,start,field,tofind){
-    var tofind=tibetan.romanize.fromWylie(tofind);
+  dosearch: function(e,reactid,start){
+    var field=$(this.refs.searchtype.getDOMNode()).find(".active")[0].dataset.type;
+    var tofind=this.refs.tofind.getDOMNode().value.trim();
+    tofind=tibetan.romanize.fromWylie(tofind);
 
     field=field || this.state.field;
     if(field == "fulltext"){
@@ -88,7 +88,7 @@ var main = React.createClass({
     if (this.state.db) {
       return (    
         <div>
-        <input className="form-control input-small" ref="tofind" onInput={this.tofindchange} placeholder="Type something to start searching"></input>
+        <input className="tofind form-control input-small" ref="tofind" onInput={this.tofindchange} placeholder="Type something to start searching"></input>
         </div>
         )          
     } else {
@@ -141,7 +141,7 @@ var main = React.createClass({
     var pagename=this.state.db.getFilePageNames(f)[p];
     this.setState({scrollto:pagename});
 
-    kse.highlightFile(this.state.db,f,{q:this.state.tofind},function(data){
+    kse.highlightFile(this.state.db,f,{q:this.state.tofind,nospan:true,nocrlf:true},function(data){
       that.setState({bodytext:data,page:p});
     });
   }, 

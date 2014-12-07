@@ -34,7 +34,7 @@ var namelist = React.createClass({
   render: function() {
     
     return (
-      <div>
+      <div className="namelist">
         {this.props.res_toc.map(this.renderNameItem)}
       </div>
     );

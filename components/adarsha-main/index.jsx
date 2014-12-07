@@ -18,7 +18,7 @@ var Showtext=Require("showtext");
 var tibetan=Require("ksana-document").languages.tibetan; 
 var page2catalog=Require("page2catalog");
 var Namelist=Require("namelist");
-var version="v0.1.26";
+var version="v0.1.27";
 var main = React.createClass({
   hideBanner:function() {
     var header=$("div.header");
@@ -39,6 +39,7 @@ var main = React.createClass({
       that.hideBanner();
     },5000);
     //window.onhashchange = function () {that.goHashTag();} 
+
   }, 
   getInitialState: function() {
     document.title=version+"-adarsha";
@@ -109,7 +110,7 @@ var main = React.createClass({
     if (this.state.db) {
       return (    
         <div>
-        <input className="tofind form-control" ref="tofind" onInput={this.tofindchange} placeholder="Type something to start searching"></input>
+        <input className="tofind form-control" ref="tofind" onInput={this.tofindchange} placeholder="type Tibetan or Wylie transliteration to search"></input>
         </div>
         )          
     } else {
@@ -199,6 +200,13 @@ var main = React.createClass({
     if(this.state.wylie == true) return tibetan.romanize.toWylie(t,null,false); 
     return t; 
   },
+  startsearch:function() {
+    var that=this;
+    setTimeout(function(){
+      that.refs.tofind.getDOMNode().focus();  
+    },500);
+    
+  },
   render: function() {
     if (!this.state.quota) { // install required db
         return this.openFileinstaller(true);
@@ -208,16 +216,16 @@ var main = React.createClass({
         text=this.state.bodytext.text;
         pagename=this.state.bodytext.pagename;
     }
-    var bodytextcols=9;
+    var bodytextcols="col-md-9";
     var menuclass="col-md-3";
     if (!this.state.sidemenu) {
-      bodytextcols=12;
+      bodytextcols="";
       menuclass="hidemenu";
     }
 
     return (
+      <div className="container-fluid">
   <div className="row">
-    <div className="col-md-12">
       <div className="header">
         <img width="100%" src="./banner/banner.png"/>
       </div>
@@ -227,7 +235,7 @@ var main = React.createClass({
           <div className="borderright">
             <ul className="nav nav-tabs" role="tablist">
               <li className="active"><a href="#Catalog" role="tab" data-toggle="tab" title="Catalog"><img width="25" src="./banner/icon-read.png"/></a></li>
-              <li><a href="#Search" role="tab" data-toggle="tab" title="Search"><img width="25" src="./banner/search.png"/></a></li>              
+              <li><a href="#Search" role="tab" onClick={this.startsearch} data-toggle="tab" title="Search"><img width="25" src="./banner/search.png"/></a></li>              
             </ul>
 
             <div className="tab-content" ref="tab-content">
@@ -263,7 +271,7 @@ var main = React.createClass({
           </div>     
         </div>
 
-        <div className={"col-md-"+bodytextcols}>
+        <div className={bodytextcols}>
           
           <div className="text text-content" ref="text-content">
           <Showtext sidemenu={this.state.sidemenu} toggleMenu={this.toggleMenu} dataN={this.state.dataN} setwylie={this.setwylie} wylie={this.state.wylie} page={this.state.page}  bodytext={this.state.bodytext} text={text} nextfile={this.nextfile} prevfile={this.prevfile} setpage={this.setPage} db={this.state.db} toc={this.state.toc} scrollto={this.state.scrollto} />

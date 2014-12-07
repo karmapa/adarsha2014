@@ -130,13 +130,12 @@ var showtext = React.createClass({
           this.textcontent.scrollTop( pb.position().top-120 );
           pb.addClass("scrolled");
         }
-        this.shouldscroll=false;
-      }         
+      }
     } 
     if(this.shouldscroll && this.props.scrollto && this.props.scrollto.match("_")) {
       $(".text-content").scrollTop( 0 );
-      this.shouldscroll=false;
     }
+    this.shouldscroll=false;
   },
   hitClick: function(n){
     if(this.props.showExcerpt) this.props.showExcerpt(n);

@@ -83,10 +83,14 @@ var main = React.createClass({
     },300);
     //var field=e.target.parentElement.dataset.type;
   },
+  removeLeadingEndingSpace:function(tofind) {
+    return tofind.replace(/^་/,"").replace(/་$/,"");
+  },
   dosearch: function(e,reactid,start){
     var field=$(this.refs.searchtype.getDOMNode()).find(".active")[0].dataset.type;
     var tofind=this.refs.tofind.getDOMNode().value.trim();
     tofind=tibetan.romanize.fromWylie(tofind);
+    tofind=this.removeLeadingEndingSpace(tofind);
 
     field=field || this.state.field;
     if(field == "fulltext"){

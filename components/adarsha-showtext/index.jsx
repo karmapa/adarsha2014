@@ -19,7 +19,7 @@ var Controlsfile = React.createClass({
     for(var i=0; i<parents.length; i++){
       out.push(this.props.toc[parents[i]].text);
     }
-    return out.join("  >  ");
+    return out.join("  /  ");
   },
   findByVoff: function(voff) {
     if(!this.props.toc) return 0;
@@ -155,17 +155,20 @@ var showtext = React.createClass({
   togglePageImg: function(e) {
     if (e&& e.target && e.target.nextSibling && e.target.nextSibling.nextSibling &&
       e.target.nextSibling.nextSibling.nodeName=="IMG") {
-      var pb=e.target.dataset.pb;
-      this.removeImage(pb);
+      if (e.target && e.target.dataset) {
+        var pb=e.target.dataset.pb;
+        if (pb) this.removeImage(pb);
+      }
     } else {
-      var pb=e.target.dataset.pb;
+      var pb=null;
+      if (e.target && e.target.dataset) pb=e.target.dataset.pb;
       if (pb) {
-        this.addImage(pb);// this.setState({clickedpb:pb});  
+        this.addImage(pb);
       } else {
         if (e && e.target && e.target.previousSibling && e.target.previousSibling
           && e.target.previousSibling.previousSibling ){
           var pb=e.target.previousSibling.previousSibling.dataset.pb;
-          this.removeImage(pb);          
+          if (pb) this.removeImage(pb);
         }
       }  
     }    

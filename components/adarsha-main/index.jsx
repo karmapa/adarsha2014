@@ -18,7 +18,7 @@ var Showtext=Require("showtext");
 var tibetan=Require("ksana-document").languages.tibetan; 
 var page2catalog=Require("page2catalog");
 var Namelist=Require("namelist");
-var version="v0.1.28";
+var version="v0.1.30";
 var main = React.createClass({
   hideBanner:function() {
     var header=$("div.header");
@@ -90,12 +90,13 @@ var main = React.createClass({
   dosearch: function(e,reactid,start){
     var field=$(this.refs.searchtype.getDOMNode()).find(".active")[0].dataset.type;
     var tofind=this.refs.tofind.getDOMNode().value.trim();
+    tofind=tofind.replace(/\\/g,"\\\\");
     tofind=tibetan.romanize.fromWylie(tofind);
     tofind=this.removeLeadingEndingSpace(tofind);
 
     field=field || this.state.field;
     if(field == "fulltext"){
-      kse.search(this.state.db,tofind,{range:{start:start,maxhit:100}},function(data){ //call search engine          
+      kse.search(this.state.db,tofind,{phrase_sep:"།",range:{start:start,maxhit:100}},function(data){ //call search engine          
         this.setState({res:data, tofind:tofind, res_toc:[]});  
       });
     }
@@ -115,7 +116,7 @@ var main = React.createClass({
     if (this.state.db) {
       return (    
         <div>
-        <input className="tofind form-control" ref="tofind" onInput={this.tofindchange} placeholder="type Tibetan or Wylie transliteration to search"></input>
+        <input className="tofind form-control" ref="tofind" onInput={this.tofindchange} placeholder="Use / or ། to separate phrase, accept Wylie Transliteration"></input>
         </div>
         )          
     } else {
@@ -229,7 +230,6 @@ var main = React.createClass({
     }
 
     return (
-      <div className="container-fluid">
   <div className="row">
       <div className="header">
         <img width="100%" src="./banner/banner.png"/>
@@ -284,7 +284,6 @@ var main = React.createClass({
         </div>
       </div>
     </div>
-  </div>
       );
     }
   }

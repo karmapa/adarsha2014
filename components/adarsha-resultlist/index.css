@@ -8,7 +8,10 @@
 
 .hl {color:red;}
 .hl1 {color: blue;}
-.hl2 {color: green;}
+.hl2 {color: orange;}
+.hl3 {color: purple;}
+.hl4 {color: maroon;}
+.hl5 {color: fuchsia;}
 
 hl{color:red;}
 hl[n="1"]{color: blue;}

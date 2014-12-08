@@ -14,11 +14,11 @@ var namelist = React.createClass({
     <span>{e.target.innerHTML}</span>
     this.props.gotofile(voff);
   },
-  renderNameItem: function(item) {
+  renderNameItem: function(item,idx) {
     var context="";
     if(this.props.wylie == false){
       var tofind=this.props.tofind;
-      context=item.text.replace(tofind,function(t){return '<hl>'+t+"</hl>";});
+      context=item.text.replace(tofind,function(t){return '<span class="hl">'+t+"</span>";});
     }
     if(this.props.wylie == true){
       var tofind=tibetan.romanize.toWylie(this.props.tofind,null,false);
@@ -27,7 +27,7 @@ var namelist = React.createClass({
       
     return (
       <div>
-        <li><a herf='#' className="item" data-voff={item.voff} onClick={this.onItemClick} dangerouslySetInnerHTML={{__html:context}}></a></li>
+        {idx+1}.<a herf='#' className="item" data-voff={item.voff} onClick={this.onItemClick} dangerouslySetInnerHTML={{__html:context}}></a>
       </div> 
       )
   },
@@ -35,14 +35,14 @@ var namelist = React.createClass({
     if (!this.props.res_toc || !this.props.res_toc.length) {
       return null;
     } else {
-      return <span>{this.props.res_toc.length}</span>      
+      return <span>{this.props.res_toc.length}<br/></span>      
     }
   },
   render: function() {
     
     return (
       <div className="namelist">
-        {this.renderCount()}<br/>
+        {this.renderCount()}
         {this.props.res_toc.map(this.renderNameItem)}
       </div>
     );

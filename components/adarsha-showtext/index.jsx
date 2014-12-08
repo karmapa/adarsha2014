@@ -166,7 +166,7 @@ var showtext = React.createClass({
         this.addImage(pb);
       } else {
         if (e && e.target && e.target.previousSibling && e.target.previousSibling
-          && e.target.previousSibling.previousSibling ){
+          && e.target.previousSibling.previousSibling && e.target.previousSibling.previousSibling.dataset){
           var pb=e.target.previousSibling.previousSibling.dataset.pb;
           if (pb) this.removeImage(pb);
         }

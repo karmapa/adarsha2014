@@ -12,7 +12,7 @@ var resultlist=React.createClass({  //should search result
     return this.props.res.excerpt.map(function(r,i){ // excerpt is an array 
       var t = new RegExp(tofind,"g"); 
       var context="";
-      if(this.props.wylie == false) context=r.text.replace(t,function(tofind){return "<hl>"+tofind+"</hl>"});
+      if(this.props.wylie == false) context=r.text;//r.text.replace(t,function(tofind){return "<hl>"+tofind+"</hl>"});
       if(this.props.wylie == true) context=tibetan.romanize.toWylie(r.text,null,false).replace(t,function(tofind){return "<hl>"+tofind+"</hl>"});
       return <div data-vpos={r.hits[0][0]}>
       <a onClick={this.gotopage} className="pagename">{r.pagename}</a>

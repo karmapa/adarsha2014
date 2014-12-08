@@ -18,7 +18,7 @@ var Showtext=Require("showtext");
 var tibetan=Require("ksana-document").languages.tibetan; 
 var page2catalog=Require("page2catalog");
 var Namelist=Require("namelist");
-var version="v0.1.27";
+var version="v0.1.28";
 var main = React.createClass({
   hideBanner:function() {
     var header=$("div.header");
@@ -84,6 +84,7 @@ var main = React.createClass({
     //var field=e.target.parentElement.dataset.type;
   },
   removeLeadingEndingSpace:function(tofind) {
+    if (!tofind || tofind.length<2) return tofind;
     return tofind.replace(/^་/,"").replace(/་$/,"");
   },
   dosearch: function(e,reactid,start){

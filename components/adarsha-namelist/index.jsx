@@ -31,10 +31,18 @@ var namelist = React.createClass({
       </div> 
       )
   },
+  renderCount:function() {
+    if (!this.props.res_toc || !this.props.res_toc.length) {
+      return null;
+    } else {
+      return <span>{this.props.res_toc.length}</span>      
+    }
+  },
   render: function() {
     
     return (
       <div className="namelist">
+        {this.renderCount()}<br/>
         {this.props.res_toc.map(this.renderNameItem)}
       </div>
     );

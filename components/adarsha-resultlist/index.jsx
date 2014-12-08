@@ -24,11 +24,14 @@ var resultlist=React.createClass({  //should search result
     var vpos=parseInt(e.target.parentNode.dataset['vpos']);
     this.props.gotofile(vpos);
   },
+  renderCount:function() {
+    return <span>{this.props.res.rawresult.length} hits</span>;
+  },
   render:function() {
     if (this.props.res) {
       if (this.props.res.excerpt&&this.props.res.excerpt.length) {
-          return <div className="results">{this.show()}</div>
-          debugger;
+          return <div className="results">
+                  {this.renderCount()}<br/>{this.show()}</div>
       } else {
         return <div></div>
       }

@@ -18,7 +18,7 @@ var Showtext=Require("showtext");
 var tibetan=Require("ksana-document").languages.tibetan; 
 var page2catalog=Require("page2catalog");
 var Namelist=Require("namelist");
-var version="v0.1.30";
+var version="v0.1.31";
 var main = React.createClass({
   hideBanner:function() {
     var header=$("div.header");
@@ -109,14 +109,26 @@ var main = React.createClass({
       var res_sutra=api.search_api.searchSutra(tofind,this.state.toc);
       if(tofind != "") this.setState({res_toc:res_sutra, tofind:tofind, res:[]});
       else this.setState({res_toc:[], tofind:tofind, res:[]});
-    }
+    }  
+  },
+  renderInputSyntax:function() {
+    if (!this.refs.searchtype) return;
+    var field=$(this.refs.searchtype.getDOMNode()).find(".active")[0].dataset.type;
+    if (this.refs && this.refs.tofind && this.refs.tofind.getDOMNode().value.length==0 && field=="fulltext"){
+      return (
+      <div className="syntaxhelper">
+        <div>Use / or ། (shad) to separate multiple keywords</div>
+        <div>Wildcard ?, e.g: རབ་?་དང</div>
+      </div>
+        ) 
+    } else return null;
     
   },
   renderinputs:function(searcharea) {  // input interface for search // onInput={this.searchtypechange}
     if (this.state.db) {
       return (    
         <div>
-        <input className="tofind form-control" ref="tofind" onInput={this.tofindchange} placeholder="Use / or ། to separate phrase, accept Wylie Transliteration"></input>
+        <input className="tofind form-control" ref="tofind" onInput={this.tofindchange} placeholder="Type Tibetan or Wylie Transliteration"></input>
         </div>
         )          
     } else {
@@ -196,7 +208,7 @@ var main = React.createClass({
     if (fp.length){
       this.showPage(fp[0].file,fp[0].page);
     }
-    console.log(newpagename);
+    //console.log(newpagename);
   },
   setwylie: function() {
     this.setState({wylie:!this.state.wylie});
@@ -267,8 +279,9 @@ var main = React.createClass({
                   </div> 
                   
               
-                                    
+                
                 </div>       
+                {this.renderInputSyntax()}
                 <Namelist wylie={this.state.wylie} res_toc={this.state.res_toc} tofind={this.state.tofind} gotofile={this.gotofile} />
                 <Resultlist wylie={this.state.wylie} res={this.state.res} tofind={this.state.tofind} gotofile={this.gotofile} />
               </div>        

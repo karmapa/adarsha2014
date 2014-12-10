@@ -92,10 +92,8 @@ var Controlsfile = React.createClass({
 
             <button className="btn btn-default right" title="Increase Font Size" onClick={this.increasefontsize}><img width="20" src="./banner/increasefontsize.png"/></button>
             <button className="btn btn-default right" title="Decrease Font Size" onClick={this.decreasefontsize}><img width="20" src="./banner/decreasefontsize.png"/></button>
-
             <br/>
             <br/><span id="address" dangerouslySetInnerHTML={{__html:this.getAddress()}}></span>
-
           </div>
   }  
 });
@@ -211,8 +209,6 @@ var showtext = React.createClass({
     return (
       <div className="cursor">
         <Controlsfile sidemenu={this.props.sidemenu} toggleMenu={this.props.toggleMenu} dataN={this.props.dataN} setwylie={this.props.setwylie} wylie={this.props.wylie} page={this.props.page} bodytext={this.props.bodytext}  next={this.props.nextfile} prev={this.props.prevfile} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} />
-        <br/>
-        <br/>
         <div onClick={this.togglePageImg} className="pagetext" dangerouslySetInnerHTML={{__html: content}} />
       </div>
     );

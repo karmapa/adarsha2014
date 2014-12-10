@@ -18,7 +18,7 @@ var Showtext=Require("showtext");
 var tibetan=Require("ksana-document").languages.tibetan; 
 var page2catalog=Require("page2catalog");
 var Namelist=Require("namelist");
-var version="v0.1.34";
+var version="v0.1.36";
 var main = React.createClass({
   hideBanner:function() {
     var header=$("div.header");
@@ -42,7 +42,9 @@ var main = React.createClass({
 
   }, 
   getInitialState: function() {
-    document.title=version+"-adarsha";
+    //for Mac OS X, edit info.plist
+    //  <key>CFBundleName</key>
+    document.title="Adarsha "+version;
     return {sidemenu:true,dialog:null,res:{},res_toc:[],bodytext:{file:0,page:0},db:null,toc_result:[],page:0,field:"sutra",scrollto:0,hide:false, wylie:false, dataN:null};
   },
   setBannerHeight:function(bannerHeight) {
@@ -122,23 +124,38 @@ var main = React.createClass({
   renderInputSyntax:function() {
     if (!this.refs.searchtype) return;
     var field=$(this.refs.searchtype.getDOMNode()).find(".active")[0].dataset.type;
-    if (this.refs && this.refs.tofind && this.refs.tofind.getDOMNode().value.length==0 && field=="fulltext"){
-      return (
-      <div className="syntaxhelper">
-        <div><b>Wildcards:</b> ? * <br/>
-          ? match single unknown syllable:<br/>
-            e.g: <a href="#" onClick={this.clicksearch}>bde ? snying</a> 1 syllable in between<br/>
-            e.g: <a href="#" onClick={this.clicksearch}>མི་2?་པ</a> 2 syllables in between<br/>
-          * match a range of unknown syllables:<br/>
-            e.g: <a href="#" onClick={this.clicksearch}>mi 5* pa</a> 1 to 5 syllables in between<br/>
+    if (this.refs && this.refs.tofind && this.refs.tofind.getDOMNode().value.length==0){
+      if (field=="fulltext") {
+        return (
+        <div className="syntaxhelper">
+          <div><b>Wildcards:</b> ? * <br/>
+            ? match single unknown syllable:<br/>
+              e.g: <a href="#" onClick={this.clicksearch}>bde ? snying</a> 1 syllable in between<br/>
+              e.g: <a href="#" onClick={this.clicksearch}>མི་2?་པ</a> 2 syllables in between<br/>
+            * match a range of unknown syllables:<br/>
+              e.g: <a href="#" onClick={this.clicksearch}>mi 5* pa</a> 1 to 5 syllables in between<br/>
 
+          </div>
+          <div><b>Word separator:</b>
+           / or ། (shad) <br/>
+              e.g: <a href="#" onClick={this.clicksearch}>bde/snying</a><br/>
+          </div>      
         </div>
-        <div><b>Word separator:</b>
-         / or ། (shad) <br/>
-            e.g: <a href="#" onClick={this.clicksearch}>bde/snying</a><br/>
-        </div>      
-      </div>
-        ) 
+          ) 
+      } else if (field=="sutra") {
+        return (
+          <div className="syntaxhelper">
+            Type <a href="#" onClick={this.clicksearch} style={{fontSize:"300%"}}>་</a>(tsheg) to display all titles.
+          </div>
+        )
+      } else {
+        return (
+          <div className="syntaxhelper">
+            Type <a href="#" onClick={this.clicksearch} style={{fontSize:"300%"}}>་</a>(tsheg) to display table of content.
+          </div>
+        )
+      }
+
     } else return null;
     
   },
@@ -277,7 +294,9 @@ var main = React.createClass({
             <div className="tab-content" ref="tab-content">
               <div className="tab-pane fade in active" id="Catalog">               
                 <Stacktoc textConverter={this.textConverter} showText={this.showText} 
-                showExcerpt={this.showExcerpt} opts={{stopAt:"་",maxitemlength:40,tocstyle:"vertical_line"}}
+                showExcerpt={this.showExcerpt} 
+                opts={{tocbar:"banner/bar.png",tocbar_start:"banner/bar_start.png",stopAt:"་",
+                maxitemlength:42,tocstyle:"vertical_line"}}
                 hits={this.state.res.rawresult} data={this.state.toc} goVoff={this.state.goVoff} />
               </div>
 
@@ -287,17 +306,15 @@ var main = React.createClass({
                 <div className="center">
                   <div className="btn-group" data-toggle="buttons" ref="searchtype" onClick={this.searchtypechange}>
                     <label data-type="sutra" className="btn btn-default btn-xs searchmode">
-                    <input type="radio" name="field" autocomplete="off"><img title="མདོ་མིང་འཚོལ་བ། Sutra Search" width="25" src="./banner/icon-sutra.png"/></input>
+                    <input type="radio" name="field" autocomplete="off"><img title="མདོ་མིང་འཚོལ་བ། Title Search" width="25" src="./banner/icon-sutra.png"/></input>
                     </label>
                     <label data-type="kacha" className="btn btn-default btn-xs searchmode">
-                    <input type="radio" name="field" autocomplete="off"><img title="དཀར་ཆག་འཚོལ་བ། Karchak Search" width="25" src="./banner/icon-kacha.png"/></input>
+                    <input type="radio" name="field" autocomplete="off"><img title="དཀར་ཆག་འཚོལ་བ། Table of Content Search" width="25" src="./banner/icon-kacha.png"/></input>
                     </label>
                     <label data-type="fulltext" className="btn btn-default btn-xs searchmode active">
                     <input type="radio" name="field" autocomplete="off"><img title="ནང་དོན་འཚོལ་བ།  Full Text Search" width="25" src="./banner/icon-fulltext.png"/></input>
                     </label>
                   </div> 
-                  
-              
                 
                 </div>       
                 {this.renderInputSyntax()}

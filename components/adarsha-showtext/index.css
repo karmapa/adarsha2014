@@ -1,6 +1,7 @@
 .showtext {font-family: ctrc-uchen;
 	cursor:text;}
 .pagetext {
+  padding-top:50px;
   line-height: 30px;
 	font-size: 125%;
 	cursor:default;
@@ -24,8 +25,12 @@
 pb:after{content: attr(n);}
 division:after{content: attr(t);
 	}
-#address{font-size: 120%;
-	cursor:default;}
+#address{
+  font-size: 120%;
+	cursor:default;
+  padding-left:15px;
+  display:inline-block;
+}
 
 .right{float: right;}
 

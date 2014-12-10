@@ -4,6 +4,16 @@
 @font-face { font-family: 'tibetan1'; font-style: normal; font-weight: normal; src: url("../fonts/himalaya_2.ttf"); }
 .text , .tocitem {font-family: 'tibetan1';text-decoration: none;cursor:pointer;}
 .stacktoc , .results , .item , .nav-tabs {font-family: 'tibetan1';}
-div.current {color:black; background:#95CB85;border-bottom-right-radius:10px 10px;}
-div.current:hover {background:#BDEBAD;}
+div.parent{background:white; }
+div.parent:hover { background:#D8F6CE;}
+div.current {color:black; background:white ;border-bottom-right-radius:10px 10px;}
+div.current:hover {background:#D8F6CE;}
+div.child:hover {background:#D8F6CE;}
+.tocitem {text-decoration: none;cursor:pointer;line-height: 180%;}
+.expandable:before {content: url(../banner/plus.png)}
+a.tocitem {padding-right:6px ;padding-left:6px;}
+.text {
+	 padding-top:0px; 
+	 padding-right:0px; 
+}
 body { overflow: hidden;}

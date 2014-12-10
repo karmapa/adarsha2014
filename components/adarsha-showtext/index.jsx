@@ -11,21 +11,24 @@ var Controlsfile = React.createClass({
   },
   filepage2vpos:function(file,page) {
     var out=[];
-    if(!this.props.db) return 0;
+    if(!this.props.db || !this.props.toc) return 0;
     var offsets=this.props.db.getFilePageOffsets(file);
     var voff=offsets[page];
+
     var n=this.findByVoff(voff);//toc裡的第幾項
-    var parents=this.enumAncestors(n) || 1;
+    var parents=this.enumAncestors(n) || [];
+
     for(var i=0; i<parents.length; i++){
       out.push(this.props.toc[parents[i]].text);
     }
-    return out.join("  /  ");
+    return out.join('<img src="banner/slash.png"></img>');
   },
+
   findByVoff: function(voff) {
     if(!this.props.toc) return 0;
     for (var i=0;i<this.props.toc.length;i++) {
       var t=this.props.toc[i];
-      if (t.voff>=voff) return i;
+      if (t.voff>voff) return i-1;
     }
     return 0; //return root node
   },
@@ -34,7 +37,7 @@ var Controlsfile = React.createClass({
     if (!toc || !toc.length) return;
     //var cur=this.state.cur;
     if (cur==0) return [];
-    var n=cur-1;
+    var n=cur;
     var depth=toc[cur].depth - 1;
     var parents=[];
     while (n>=0 && depth>0) {
@@ -45,9 +48,7 @@ var Controlsfile = React.createClass({
       n--;
     }
     parents.unshift(0); //first ancestor is root node
-    if(this.props.dataN && toc[this.props.dataN].depth==toc[this.props.dataN+1].depth){
-      parents.push(this.props.dataN);
-    }
+    parents.push(cur);
 
     return parents;
   },
@@ -56,10 +57,8 @@ var Controlsfile = React.createClass({
     var file=this.props.bodytext.file;
     var page=this.props.page;
     var res=this.filepage2vpos(file,page);
-   // this.setState({address:res});
    if(this.props.wylie == false) return res;
-   if(this.props.wylie == true) return tibetan.romanize.toWylie(res,null,false);
-    
+   if(this.props.wylie == true) return tibetan.romanize.toWylie(res,null,false);    
   },
   increasefontsize:function() {
     var fontsize=parseFloat($(".pagetext").css("font-size"));
@@ -88,16 +87,14 @@ var Controlsfile = React.createClass({
             <button className="btn btn-default" title="Previous File" onClick={this.props.prev}><img width="20" src="./banner/prev.png"/></button>
             <button className="btn btn-default" title="Next File" onClick={this.props.next}><img width="20" src="./banner/next.png"/></button>
 
-
             <button className="btn btn-default right" title="Contact Us"><a href="http://www.dharma-treasure.org/en/contact-us/" target="_new"><img width="20" src="./banner/icon-info.png"/></a></button>
             <button className="btn btn-default right" title="Toggle Wylie Transliteration" onClick={this.props.setwylie}><img width="20" src="./banner/icon-towylie.png"/></button>
 
             <button className="btn btn-default right" title="Increase Font Size" onClick={this.increasefontsize}><img width="20" src="./banner/increasefontsize.png"/></button>
             <button className="btn btn-default right" title="Decrease Font Size" onClick={this.decreasefontsize}><img width="20" src="./banner/decreasefontsize.png"/></button>
 
-
             <br/>
-            <br/><span id="address">{this.getAddress()}</span>
+            <br/><span id="address" dangerouslySetInnerHTML={{__html:this.getAddress()}}></span>
 
           </div>
   }  
@@ -131,8 +128,7 @@ var showtext = React.createClass({
           pb.addClass("scrolled");
         }
       }
-    } 
-    if(this.shouldscroll && this.props.scrollto && this.props.scrollto.match("_")) {
+    } else if(this.shouldscroll){
       $(".text-content").scrollTop( 0 );
     }
     this.shouldscroll=false;

@@ -58,7 +58,7 @@ input {
 	width:260px;
 }
 
-.col-md-9{
+.col-md-8{
     padding-right: 0;	
 }
 .borderright{
@@ -93,6 +93,6 @@ a{color:#178918;}
 }
 
 
-input.tofind {font-size:150%}
+input.tofind {font-size:200%}
 div.syntaxhelper {font-size:125%}
 .hidemenu {visibility:hidden;display:none;}

@@ -1,24 +1,34 @@
 var searchSutra=function(tofind,toc){
-	var reg=new RegExp(tofind,"g");
 	var out=[];
-	toc.map(function(item){
-		if(item.depth==3 && item.text.match(reg)){
-			out.push(item);
-		}
-	});
-	return out;
+	try {
+		var reg=new RegExp(tofind,"g"); //this might throw
+		toc.map(function(item){
+			if(item.depth==3 && item.text.match(reg)){
+				out.push(item);
+			}
+		});
+		return out;
+	} catch (e) {
+		console.log(e);
+		return out;
+	}
 }
 
 var searchKacha=function(tofind,toc){
 	var out=[];
-	var reg=new RegExp(tofind,"g");
-	toc.map(function(item){
+	try {
+		var reg=new RegExp(tofind,"g"); //this might throw
+		toc.map(function(item){
 
-		if(item.depth!=3 && item.depth!=0 && item.text.match(reg)){
-			out.push(item);
-		}
-	});
-	return out;
+			if(item.depth!=3 && item.depth!=0 && item.text.match(reg)){
+				out.push(item);
+			}
+		});
+		return out;
+	} catch (e) {
+		console.log(e);
+		return out;
+	}
 }
 
 var search_api={searchSutra:searchSutra,searchKacha:searchKacha}

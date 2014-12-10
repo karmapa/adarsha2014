@@ -9,16 +9,21 @@ var resultlist=React.createClass({  //should search result
     if(this.props.wylie == false) var tofind=this.props.tofind;
     if(this.props.wylie == true ) var tofind=tibetan.romanize.toWylie(this.props.tofind,null,false);
     
-    return this.props.res.excerpt.map(function(r,i){ // excerpt is an array 
+    try {
       var t = new RegExp(tofind,"g"); 
-      var context="";
-      if(this.props.wylie == false) context=r.text;//r.text.replace(t,function(tofind){return "<hl>"+tofind+"</hl>"});
-      if(this.props.wylie == true) context=tibetan.romanize.toWylie(r.text,null,false).replace(t,function(tofind){return "<hl>"+tofind+"</hl>"});
-      return <div data-vpos={r.hits[0][0]}>
-      <a onClick={this.gotopage} className="pagename">{r.pagename}</a>
-        <div className="resultitem" dangerouslySetInnerHTML={{__html:context}}></div>
-      </div>
-    },this);
+      return this.props.res.excerpt.map(function(r,i){ // excerpt is an array 
+      
+        var context="";
+        if(this.props.wylie == false) context=r.text;//r.text.replace(t,function(tofind){return "<hl>"+tofind+"</hl>"});
+        if(this.props.wylie == true) context=tibetan.romanize.toWylie(r.text,null,false).replace(t,function(tofind){return "<hl>"+tofind+"</hl>"});
+        return <div data-vpos={r.hits[0][0]}>
+        <a onClick={this.gotopage} className="pagename">{r.pagename}</a>
+          <div className="resultitem" dangerouslySetInnerHTML={{__html:context}}></div>
+        </div>
+      },this);
+    } catch(e) {
+    return null;
+  }
   }, 
   gotopage:function(e) {
     var vpos=parseInt(e.target.parentNode.dataset['vpos']);

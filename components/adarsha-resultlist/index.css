@@ -1,9 +1,9 @@
-.results {}
 
 .results{font-family: ctrc-uchen;
 	line-height: 26px;
 	font-size:150%;
 	padding-left: 10px;}
+.resultitem{line-height:180%;}
 .pagename{cursor: pointer;}
 
 .hl {color:red;}

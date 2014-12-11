@@ -33,13 +33,23 @@ var main = React.createClass({
     this.setState({sidemenu:!this.state.sidemenu});
   },
   bannerHeight:100,
+  handleResize:function() {
+    clearTimeout(this.resizetimer);
+    var that=this;
+    this.resizetimer=setTimeout(function(){
+      that.setBannerHeight(that.bannerHeight);
+    },300);
+  },
+  componentWillUnmount:function() {
+    window.removeEventListener('resize', this.handleResize);
+  },
   componentDidMount:function() {
     var that=this;
     setTimeout(function(){
       that.hideBanner();
     },5000);
     //window.onhashchange = function () {that.goHashTag();} 
-
+    window.addEventListener('resize', this.handleResize);
   }, 
   getInitialState: function() {
     //for Mac OS X, edit info.plist

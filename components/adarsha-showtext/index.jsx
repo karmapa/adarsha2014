@@ -114,6 +114,19 @@ var showtext = React.createClass({
   componentDidMount:function() {
     this.textcontent=$(".text-content");
   },
+  onImageError:function() {
+    console.log("image error");
+  },
+  checkImageLoaded:function() {
+    var pagetext=this.refs.pagetext.getDOMNode();
+    var images=pagetext.querySelectorAll("IMG.sourceimage");
+    for (var i=0;i<images.length;i++) {
+      var img=images[i];
+      if (!(typeof img.naturalWidth !== "undefined" && img.naturalWidth)) {
+        img.src="banner/image_notfound.png";
+      }
+    }
+  },
   componentDidUpdate: function()  {
     if(this.shouldscroll && this.props.scrollto && this.props.scrollto.match(/[abc]/) ){
       var p=this.props.scrollto.match(/\d+.(\d+)[abc]/);
@@ -129,6 +142,10 @@ var showtext = React.createClass({
     } else if(this.shouldscroll){
       $(".text-content").scrollTop( 0 );
     }
+    var that=this;
+    setTimeout(function(){
+      that.checkImageLoaded();
+    },10);
     this.shouldscroll=false;
   },
   hitClick: function(n){
@@ -193,7 +210,7 @@ var showtext = React.createClass({
       if(that.state.clickedpb.indexOf(m1)>-1){
         var imgName=that.getImgName(m1);
         var corresPage=that.getCorresPage(m1);
-        link='<br></br><a href="#" data-pb="'+m1+'">'+m1+'</a>&nbsp;(Derge:'+corresPage+')<img data-img="'+m1+'" width="100%" src="../adarsha_img/lijiang/'+imgName+'.jpg"/><br></br>';
+        link='<br></br><a href="#" data-pb="'+m1+'">'+m1+'</a>&nbsp;(Derge:'+corresPage+')<img class="sourceimage" data-img="'+m1+'" width="100%" src="../adarsha_img/lijiang/'+imgName+'.jpg"/><br></br>';
       }
       return link;
     });
@@ -209,7 +226,7 @@ var showtext = React.createClass({
     return (
       <div className="cursor">
         <Controlsfile sidemenu={this.props.sidemenu} toggleMenu={this.props.toggleMenu} dataN={this.props.dataN} setwylie={this.props.setwylie} wylie={this.props.wylie} page={this.props.page} bodytext={this.props.bodytext}  next={this.props.nextfile} prev={this.props.prevfile} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} />
-        <div onClick={this.togglePageImg} className="pagetext" dangerouslySetInnerHTML={{__html: content}} />
+        <div onClick={this.togglePageImg} ref="pagetext" className="pagetext" dangerouslySetInnerHTML={{__html: content}} />
       </div>
     );
   }

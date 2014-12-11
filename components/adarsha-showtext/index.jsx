@@ -122,7 +122,7 @@ var showtext = React.createClass({
     var images=pagetext.querySelectorAll("IMG.sourceimage");
     for (var i=0;i<images.length;i++) {
       var img=images[i];
-      if (!(typeof img.naturalWidth !== "undefined" && img.naturalWidth)) {
+      if (img.naturalWidth==0) {
         img.src="banner/image_notfound.png";
       }
     }
@@ -143,9 +143,10 @@ var showtext = React.createClass({
       $(".text-content").scrollTop( 0 );
     }
     var that=this;
-    setTimeout(function(){
+    clearTimeout(this.checkimagetimer);
+    this.checkimagetimer=setTimeout(function(){
       that.checkImageLoaded();
-    },10);
+    },2000);
     this.shouldscroll=false;
   },
   hitClick: function(n){

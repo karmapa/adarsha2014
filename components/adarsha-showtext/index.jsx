@@ -223,6 +223,8 @@ var showtext = React.createClass({
         link='</span><br></br><a href="#" data-pb="'+m1+'">'+m1+'<img width="25" data-pb="'+m1+'" src="banner/imageicon.png"/></a><span>';
       }
       if (!nextpagekeepcrlf) {
+        pagetext=pagetext.replace(/། །\r?\n/g,"། །");
+        pagetext=pagetext.replace(/།།\r?\n/g,"།།");
         pagetext=pagetext.replace(/།\r?\n/g,"། ");
         pagetext=pagetext.replace(/\r?\n/g,"");
         nextpagekeepcrlf=false;

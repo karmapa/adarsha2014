@@ -211,6 +211,7 @@ var showtext = React.createClass({
       var p=m1.match(/\d+.(\d+[ab])/) || ["",""];
       var link="";
       var pagetext=s.substring(lastidx+m.length,idx);
+      if (idx==0) pagetext="";
       if(that.state.clickedpb.indexOf(m1)>-1){
         var imgName=that.getImgName(m1);
         var corresPage=that.getCorresPage(m1);

@@ -6,12 +6,32 @@
 var tibetan=Require("ksana-document").languages.tibetan; 
 var namelist = React.createClass({
   getInitialState: function() {
-    return {};
+    return {selected:null};
+  },
+  componentDidUpdate:function() {
+    if(this.selectedentry) {
+      //this.selectedentry.removeClass("entry-selected");
+      this.selectedentry.addClass("entry-selected");
+    } 
+  },
+  componentWillReceiveProps :function(nextProps) {
+    if (nextProps.res_toc.length!=this.props.res_toc.length) {
+      if (this.selectedentry)  this.selectedentry.removeClass("entry-selected");
+      this.selectedentry=null;
+    }
   },
   onItemClick:function(e) {
-    if (e.target.nodeName == "HL") var voff=parseInt(e.target.parentElement.dataset.voff);
-    else voff=parseInt(e.target.dataset.voff);
-    <span>{e.target.innerHTML}</span>
+    var voff=parseInt(e.target.dataset.voff);
+    var parent=e.target.parentElement;
+    if (e.target.nodeName == "HL") {
+      voff=parseInt(e.target.parentElement.dataset.voff);
+      parent=e.target.parentElement.parentElement;
+    }
+    if (this.selectedentry)  this.selectedentry.removeClass("entry-selected");
+    //  $(e.target).addClass("entry-selected");
+    this.selectedentry=$(e.target);
+
+    //<span>{e.target.innerHTML}</span>
     this.props.gotofile(voff);
   },
   renderNameItem: function(item,idx) {

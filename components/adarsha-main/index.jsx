@@ -18,7 +18,7 @@ var Showtext=Require("showtext");
 var tibetan=Require("ksana-document").languages.tibetan; 
 var page2catalog=Require("page2catalog");
 var Namelist=Require("namelist");
-var version="v0.1.38";
+var version="v0.1.40";
 var main = React.createClass({
   hideBanner:function() {
     var header=$("div.header");
@@ -227,7 +227,7 @@ var main = React.createClass({
     var pagename=this.state.db.getFilePageNames(f)[p];
     this.setState({scrollto:pagename});
 
-    kse.highlightFile(this.state.db,f,{q:this.state.tofind,nospan:true,nocrlf:true},function(data){
+    kse.highlightFile(this.state.db,f,{q:this.state.tofind,nospan:true},function(data){
       that.setState({bodytext:data,page:p});
     });
   }, 

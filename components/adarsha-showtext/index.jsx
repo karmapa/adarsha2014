@@ -205,24 +205,40 @@ var showtext = React.createClass({
   renderpb: function(s){
     var that=this;
     if(typeof s == "undefined") return "";
-    s= s.replace(/<pb n="(.*?)"><\/pb>/g,function(m,m1){
+    var out="",lastidx=0,nextpagekeepcrlf=false;
+
+    s.replace(/<pb n="(.*?)"><\/pb>/g,function(m,m1,idx){
       var p=m1.match(/\d+.(\d+[ab])/) || ["",""];
-      var link='<br></br><a href="#" data-pb="'+m1+'">'+m1+'<img width="25" data-pb="'+m1+'" src="banner/imageicon.png"/></a>';
+      var link="";
+      var pagetext=s.substring(lastidx+m.length,idx);
       if(that.state.clickedpb.indexOf(m1)>-1){
         var imgName=that.getImgName(m1);
         var corresPage=that.getCorresPage(m1);
-        link='<br></br><a href="#" data-pb="'+m1+'">'+m1+'</a>&nbsp;(Derge:'+corresPage+')<img class="sourceimage" data-img="'+m1+'" width="100%" src="../adarsha_img/lijiang/'+imgName+'.jpg"/><br></br>';
+        link='</span><br></br><a href="#" data-pb="'+m1+'">'+m1+
+        '</a>&nbsp;(Derge:'+corresPage+')<img class="sourceimage" data-img="'+m1+'" width="100%" src="../adarsha_img/lijiang/'+imgName+'.jpg"/><br></br>'
+        +'<span class="textwithimage">';
+        nextpagekeepcrlf=true;
+      } else {
+        link='</span><br></br><a href="#" data-pb="'+m1+'">'+m1+'<img width="25" data-pb="'+m1+'" src="banner/imageicon.png"/></a><span>';
       }
-      return link;
+      if (!nextpagekeepcrlf) {
+        pagetext=pagetext.replace(/\r?\n/g,"");
+        nextpagekeepcrlf=false;
+      }
+      out+=pagetext+link;
+      lastidx=idx;
     });
+    out+=s.substring(lastidx);
+
+    out="<span>"+out+"</span>";
     
-    return s;
+    return out;
   },
   render: function() {
 
     var content=this.props.text||"";
     if (this.props.wylie) content=tibetan.romanize.toWylie(content,null,false);
-    content=this.renderpb(content.replace(/[^།]\n/,""));
+    content=this.renderpb(content);
  
     return (
       <div className="cursor">

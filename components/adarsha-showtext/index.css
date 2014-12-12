@@ -1,5 +1,6 @@
 .showtext {font-family: ctrc-uchen;
 	cursor:text;}
+.textwithimage {white-space: pre-wrap}
 .pagetext {
   padding-top:50px;
   line-height: 30px;

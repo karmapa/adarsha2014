@@ -9,6 +9,7 @@ div.parent:hover { background:#D8F6CE;}
 div.current {color:black; background:white ;border-bottom-right-radius:10px 10px;}
 div.current:hover {background:#D8F6CE;}
 div.child:hover {background:#D8F6CE;}
+.entry-selected {background:#D8F6CE;}
 .tocitem {text-decoration: none;cursor:pointer;line-height: 180%;}
 .expandable:before {content: url(../banner/plus.png)}
 a.tocitem {padding-right:6px ;padding-left:6px;}

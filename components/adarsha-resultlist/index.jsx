@@ -30,13 +30,24 @@ var resultlist=React.createClass({  //should search result
     this.props.gotofile(vpos);
   },
   renderCount:function() {
-    return <span>{this.props.res.rawresult.length} hits</span>;
+    var hit=this.props.res.tochit ||this.props.res.rawresult.length;
+
+    return <span>{hit} hits</span>;
+  },
+  warnTooMuch:function() {
+    if (this.props.res.excerptOverflow)  {
+      return <div className="alert alert-danger" role="danger">
+        Please refine your search or click number beside table of content to narrow down the range.
+      </div>
+    }
   },
   render:function() {
     if (this.props.res) {
       if (this.props.res.excerpt&&this.props.res.excerpt.length) {
           return <div className="results">
-                  {this.renderCount()}<br/>{this.show()}</div>
+                  {this.renderCount()}<br/>{this.show()}
+                  <br/>{this.warnTooMuch()}
+                  </div>
       } else {
         return <div></div>
       }

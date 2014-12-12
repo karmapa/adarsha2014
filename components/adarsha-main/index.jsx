@@ -18,7 +18,7 @@ var Showtext=Require("showtext");
 var tibetan=Require("ksana-document").languages.tibetan; 
 var page2catalog=Require("page2catalog");
 var Namelist=Require("namelist");
-var version="v0.1.42";
+var version="v0.1.44";
 var main = React.createClass({
   hideBanner:function() {
     var header=$("div.header");
@@ -104,7 +104,14 @@ var main = React.createClass({
     if (!tofind || tofind.length<2) return tofind;
     return tofind.replace(/^་/,"").replace(/་$/,"");
   },
-  dosearch: function(e,reactid,start){
+  dosearch: function(e,reactid,start_end){
+    var start=start_end,tochit=0;
+    var end=this.state.db.get("meta").vsize;
+    if (typeof start_end!="number" && typeof start_end[0]=="number") {
+      start=start_end[0];
+      end=start_end[1];
+      tochit=start_end[2];
+    }
     var field=$(this.refs.searchtype.getDOMNode()).find(".active")[0].dataset.type;
     var tofind=this.refs.tofind.getDOMNode().value.trim();
     tofind=tofind.replace(/\\/g,"\\\\"); //escape operator
@@ -116,8 +123,10 @@ var main = React.createClass({
 
     field=field || this.state.field;
     if(field == "fulltext"){
-      kse.search(this.state.db,tofind,{phrase_sep:"།",range:{start:start,maxhit:100}},function(data){ //call search engine          
-        this.setState({res:data, tofind:tofind, res_toc:[]});  
+      kse.search(this.state.db,tofind,{phrase_sep:"།",
+        range:{start:start,end:end,maxhit:100}},function(data){ //call search engine          
+        data.tochit=tochit;
+        this.setState({res:data, tofind:tofind, res_toc:[] });  
       });
     }
     if(field == "kacha"){
@@ -213,9 +222,13 @@ var main = React.createClass({
   },
   showExcerpt:function(n) {
     var voff=this.state.toc[n].voff;
-    this.dosearch(null,null,voff,"fulltext",this.state.tofind);
+    var end=this.state.toc[n].end;
+    var hit=this.state.toc[n].hit;
    // var searchtabid=$(".tab-pane#Search").attr("id");
     $('.nav a[href=#Search]').tab('show');
+    $("label.searchmode").removeClass("active");
+    $("label[data-type='fulltext']").addClass("active");
+    this.dosearch(null,null,[voff,end,hit]);
   },
   gotofile:function(vpos){
     var res=kse.vpos2filepage(this.state.db,vpos);

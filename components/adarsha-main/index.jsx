@@ -18,7 +18,7 @@ var Showtext=Require("showtext");
 var tibetan=Require("ksana-document").languages.tibetan; 
 var page2catalog=Require("page2catalog");
 var Namelist=Require("namelist");
-var version="v0.1.44";
+var version="v0.1.45";
 var main = React.createClass({
   hideBanner:function() {
     var header=$("div.header");

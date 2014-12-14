@@ -7,7 +7,7 @@ var tibetan=Require("ksana-document").languages.tibetan;
 var mappings={"J":dataset.jPedurma,"D":dataset.dPedurma};
 var Controlsfile = React.createClass({
   getInitialState: function() {
-    return {address:0,fontsize:125};
+    return {address:0,fontsize:125,message:""};
   },
   filepage2vpos:function(file,page) {
     var out=[];
@@ -74,6 +74,24 @@ var Controlsfile = React.createClass({
     $(".pagetext").css("font-size",fontsize+"px")
     .css("line-height",(fontsize*1.7)+"px");
   },
+  componentWillReceiveProps:function(nextProps) {
+    this.setState({message:nextProps.message});
+    var that=this;
+    if(nextProps.message) {
+      $(that.refs.message.getDOMNode()).show();
+    } else {
+      $(that.refs.message.getDOMNode()).hide();
+    }
+  },
+  componentDidUpdate:function() {
+    var that=this;
+    if (this.state.message) {
+      setTimeout(function(){
+        that.setState({message:""});
+        $(that.refs.message.getDOMNode()).hide();
+      },3000);
+    }
+  },
   renderSideMenuButton:function() {
     if (this.props.sidemenu) {
       return <button className="btn btn-default" title="Hide Side Menu" onClick={this.props.toggleMenu}><img width="20" src="./banner/hidemenu.png"/></button>
@@ -92,6 +110,7 @@ var Controlsfile = React.createClass({
 
             <button className="btn btn-default right" title="Increase Font Size" onClick={this.increasefontsize}><img width="20" src="./banner/increasefontsize.png"/></button>
             <button className="btn btn-default right" title="Decrease Font Size" onClick={this.decreasefontsize}><img width="20" src="./banner/decreasefontsize.png"/></button>
+            <span ref="message" className="alert alert-success right">{this.state.message}</span>
             <br/>
             <br/><span id="address" dangerouslySetInnerHTML={{__html:this.getAddress()}}></span>
           </div>
@@ -100,7 +119,7 @@ var Controlsfile = React.createClass({
 
 var showtext = React.createClass({
   getInitialState: function() {
-    return {bar: "world", pageImg:"",clickedpb:[]};
+    return {message:"",pageImg:"",clickedpb:[]};
   },
   shouldComponentUpdate:function(nextProps,nextState) {
     if (nextProps.page!=this.props.page) {
@@ -111,8 +130,38 @@ var showtext = React.createClass({
   componentWillReceiveProps: function() {
     this.shouldscroll=true;
   },
+  excerptCopy:function() {
+      var gui = nodeRequire('nw.gui');
+      // We can not create a clipboard, we have to receive the system clipboard
+      var clipboard = gui.Clipboard.get();
+
+      var selection = window.getSelection();
+      var range = selection.getRangeAt(0); 
+      if (range) { 
+        var container = document.createElement("div");
+        container.appendChild(range.cloneContents());
+        var source=$("#address").html().replace(/<.*?>/g,"/");
+        var text=container.innerHTML + "("+source+")";
+        text=text.replace(/<.*?>/g,"");
+        clipboard.set(text);
+        this.setState({message:"Text copied to clipboard with source infomation"});
+      }
+  },
+  handleKeyUp:function(e) {
+    if (e.keyCode==67 && e.ctrlKey){
+      if (typeof process!="undefined" && process.versions&&process.versions["node-webkit"]) {
+        e.preventDefault();
+        this.excerptCopy();
+      }
+    }
+  },
+
   componentDidMount:function() {
     this.textcontent=$(".text-content");
+    window.addEventListener("keyup", this.handleKeyUp);
+  },
+  componentWillUnmount:function() {
+    window.removeEventListener("keyup", this.handleKeyUp);
   },
   onImageError:function() {
     console.log("image error");
@@ -238,6 +287,7 @@ var showtext = React.createClass({
     
     return out;
   },
+
   render: function() {
 
     var content=this.props.text||"";
@@ -245,9 +295,9 @@ var showtext = React.createClass({
     content=this.renderpb(content);
  
     return (
-      <div className="cursor">
-        <Controlsfile sidemenu={this.props.sidemenu} toggleMenu={this.props.toggleMenu} dataN={this.props.dataN} setwylie={this.props.setwylie} wylie={this.props.wylie} page={this.props.page} bodytext={this.props.bodytext}  next={this.props.nextfile} prev={this.props.prevfile} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} />
-        <div onClick={this.togglePageImg} ref="pagetext" className="pagetext" dangerouslySetInnerHTML={{__html: content}} />
+      <div className="cursor" >
+        <Controlsfile message={this.state.message} sidemenu={this.props.sidemenu} toggleMenu={this.props.toggleMenu} dataN={this.props.dataN} setwylie={this.props.setwylie} wylie={this.props.wylie} page={this.props.page} bodytext={this.props.bodytext}  next={this.props.nextfile} prev={this.props.prevfile} setpage={this.props.setpage} db={this.props.db} toc={this.props.toc} />
+        <div onKeypress={this.keyup} onClick={this.togglePageImg} ref="pagetext" className="pagetext" dangerouslySetInnerHTML={{__html: content}} />
       </div>
     );
   }
